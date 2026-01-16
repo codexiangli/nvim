@@ -164,6 +164,8 @@ require("lazy").setup({
       vim.keymap.set('n', '<leader>gc', ':Git commit<CR>')
       vim.keymap.set('n', '<leader>gp', ':Git push<CR>')
     end
-  }
+  },
+  -- 差异查看
+  { "sindrets/diffview.nvim" },
 
 })
