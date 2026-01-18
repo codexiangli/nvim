@@ -168,4 +168,70 @@ require("lazy").setup({
   -- 差异查看
   { "sindrets/diffview.nvim" },
 
+  -- 项目管理器
+  {
+    "ahmedkhalf/project.nvim",
+    config = function()
+      require("project_nvim").setup({
+        detection_methods = { "pattern" },
+        patterns = { ".git", "Makefile", "package.json", "pyproject.toml" },
+      })
+
+      vim.keymap.set('n', '<leader>pp', ':Telescope projects<CR>')
+    end
+  },
+  -- 会话管理
+  -- {
+  --   "folke/persistence.nvim",
+  --   event = "BufReadPre",
+  --   config = function()
+  --     local persistence = require("persistence")
+  --     persistence.setup()
+
+  --     vim.keymap.set('n', '<leader>qs', function() persistence.load() end, { desc = "Restore session" })
+  --     vim.keymap.set('n', '<leader>ql', function() persistence.load({ last = true }) end, { desc = "Restore last session" })
+  --   end
+  -- },
+
+  {
+    "folke/persistence.nvim",
+    event = "BufReadPre", -- 或其他适合的事件
+    opts = {
+      -- 配置选项，例如：
+      -- 恢复会话的触发方式
+      resume = true,
+      -- 设置保存文件时自动保存会话
+      last_session = true,
+      -- 可以设置忽略特定文件类型
+      -- ignore = { "qf", "dap-repl", "terminal" },
+    },
+    config = function(_, opts)
+      require("persistence").setup(opts)
+    end,
+  },
+
+  {
+    "akinsho/toggleterm.nvim",
+    config = function()
+      require("toggleterm").setup({
+        size = 15,
+        open_mapping = [[<c-\>]],
+        direction = "horizontal",
+      })
+
+      -- 自定义终端命令
+      local Terminal = require("toggleterm.terminal").Terminal
+
+      local lazygit = Terminal:new({
+        cmd = "lazygit",
+        direction = "float",
+        float_opts = { border = "rounded" },
+        close_on_exit = false,
+      })
+
+      vim.keymap.set('n', '<leader>gg', function() lazygit:toggle() end)
+    end
+  },
+
+
 })
