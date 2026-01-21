@@ -32,6 +32,8 @@ require("lazy").setup({
 
   -- LSP Core & Setup
   { "neovim/nvim-lspconfig" },
+
+
   {
       "mason-org/mason.nvim",
       opts = {
@@ -48,9 +50,9 @@ require("lazy").setup({
       "mason-org/mason-lspconfig.nvim",
       dependencies = { "mason-org/mason.nvim", "neovim/nvim-lspconfig" },
       config = function()
-        local lsp_config = require('lsp')
+        local lsp_config = require('lspconfig')
         require("mason-lspconfig").setup({
-          ensure_installed = { 'pylsp', 'lua_ls', 'rust_analyzer', 'kotlin_language_server', 'jdtls' },
+          ensure_installed = { 'pylsp', 'pyright', 'lua_ls', 'rust_analyzer', 'kotlin_language_server', 'jdtls' },
           handlers = {
             -- Default handler for all servers EXCEPT jdtls
             function(server_name)
@@ -59,6 +61,13 @@ require("lazy").setup({
                 on_attach = lsp_config.on_attach,
                 capabilities = lsp_config.capabilities,
               })
+            end,
+            ["pyright"] = function()
+                require("lspconfig").pyright.setup({
+                    on_attach = lsp_config.on_attach,
+                    capabilities = lsp_config.capabilities,
+                    filetypes = {"python"},
+                })
             end,
             ["pylsp"] = function()
               require("lspconfig").pylsp.setup({
@@ -206,7 +215,30 @@ require("lazy").setup({
       vim.keymap.set('n', 'gcc', ':Commentary<CR>')
       vim.keymap.set('v', 'gc', ':Commentary<CR>')
     end
-    },
+  },
+
+  -- 环绕编辑
+  {
+    "tpope/vim-surround",
+    keys = {
+      { "cs", mode = "n" },  -- 更改环绕
+      { "ds", mode = "n" },  -- 删除环绕
+      { "ys", mode = { "n", "v" } }, -- 添加环绕
+    }
+  },
+
+  -- 自动配对
+  {
+      "windwp/nvim-autopairs",
+      event = "InsertEnter",
+      config = true
+  },
+
+  -- 多光标编辑
+  { "mg979/vim-visual-multi" },
+
+  -- 快速移动
+  { "ggandor/leap.nvim" },
 
   -- ================  版本控制工具 =============
   {
@@ -263,7 +295,7 @@ require("lazy").setup({
     config = function()
       require("toggleterm").setup({
         size = 15,
-        open_mapping = [[<c-\\]],
+        open_mapping = [[<c-\>]],
         direction = "horizontal",
       })
       local Terminal = require("toggleterm.terminal").Terminal
@@ -390,33 +422,46 @@ require("lazy").setup({
         sources = {
             -- Add 'avante' to the list
             default = { 'avante', 'lsp', 'path', 'snippets', 'buffer' },
-            snippets = { preset = 'luasnip' },
+            -- snippets = { preset = 'luasnip' },
             providers = {
                 avante = {
                     module = 'blink-cmp-avante',
                     name = 'Avante',
                     opts = {
                           -- options for blink-cmp-avante
-                    }
+                    },
+                    vim.api.nvim_set_hl(0, 'BlinkCmpKindAvante', { default = false, fg = '#89b4fa' }),
+                    command = {
+                        get_kind_name = function(_)
+                            return 'AvanteCmd'
+                        end
+                    },
+                    mention = {
+                        get_kind_name = function(_)
+                            return 'AvanteMention'
+                        end
+                    },
+                    shortcut = {
+                        get_kind_name = function(_)
+                            return 'AvanteShortcut'
+                        end
+                    },
+                    kind_icons = {
+                        AvanteCmd = "",
+                        AvanteMention = "",
+                        AvanteShortcut = '',
+                   },
+                   vim.api.nvim_set_hl(0, 'BlinkCmpKindAvanteCmd', { default = false, fg = '#89b4fa' }),
+                   vim.api.nvim_set_hl(0, 'BlinkCmpKindAvanteMention', { default = false, fg = '#89b4fa' }),
+                   vim.api.nvim_set_hl(0, 'BlinkCmpKindAvanteShortcut', { default = false, fg = '#89b4fa' }),
                 },
             },
           }
       }
   },
 
-  -- {
-  --   'saghen/blink.cmp',
-  --   dependencies = { 'rafamadriz/friendly-snippets' },
-  --   version = '1.*',
-  --   opts = {
-  --     keymap = { preset = 'default' },
-  --     appearance = { nerd_font_variant = 'mono' },
-  --     completion = { documentation = { auto_show = true } },
-  --     sources = { default = { 'lsp', 'path', 'snippets', 'buffer' } },
-  --     fuzzy = { implementation = "prefer_rust_with_warning" },
-  --   },
-  --   opts_extend = { "sources.default" },
-  -- },
+
+
   {
     "rcarriga/nvim-notify",
     config = function()
@@ -428,6 +473,8 @@ require("lazy").setup({
       vim.notify = require("notify")
     end,
   },
+
+
   {
     "folke/noice.nvim",
     event = "VeryLazy",
@@ -470,3 +517,4 @@ require("lazy").setup({
     },
   },
 })
+
