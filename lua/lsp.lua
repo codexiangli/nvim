@@ -1,56 +1,16 @@
--- 安全加载检查
-local mason_ok, mason = pcall(require, "mason")
-if not mason_ok then
-    vim.notify("Mason not installed. Run :PackerSync", vim.log.levels.WARN)
-    return
-end
 
-local mason_lspconfig_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
-if not mason_lspconfig_ok then
-    vim.notify("mason-lspconfig not installed. Run :PackerSync", vim.log.levels.WARN)
-    return
-end
+-- This module is now simplified to only define and export LSP handlers and capabilities.
+-- The actual setup is handled by plugins in `plugins.lua`.
 
-
-
-require('mason').setup({
-    ui = {
-        icons = {
-            package_installed = "✓",
-            package_pending = "➜",
-            package_uninstalled = "✗"
-        }
-    }
-})
-
-require('mason-lspconfig').setup({
-    -- A list of servers to automatically install if they're not already installed
-    ensure_installed = { 'pylsp', 'lua_ls', 'rust_analyzer', 'kotlin_language_server' },
-})
-
-
--- Set different settings for different languages' LSP
--- LSP list: https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
--- How to use setup({}): https://github.com/neovim/nvim-lspconfig/wiki/Understanding-setup-%7B%7D
---     - the settings table is sent to the LSP
---     - on_attach: a lua callback function to run after LSP atteches to a given buffer
-local lspconfig = require('lspconfig')
+local M = {}
 
 -- Customized on_attach function
--- See `:help vim.diagnostic.*` for documentation on any of the below functions
-local opts = { noremap = true, silent = true }
-vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
+M.on_attach = function(client, bufnr)
+    -- Debug: print when on_attach is called
+    print(string.format("LSP on_attach called for buffer %d with client %s", bufnr, client.name))
 
--- Use an on_attach function to only map the following keys
--- after the language server attaches to the current buffer
-local on_attach = function(client, bufnr)
-    -- Enable completion triggered by <c-x><c-o>
     vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-    -- See `:help vim.lsp.*` for documentation on any of the below functions
     local bufopts = { noremap = true, silent = true, buffer = bufnr }
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
@@ -71,28 +31,6 @@ local on_attach = function(client, bufnr)
     end, bufopts)
 end
 
--- Configure each language
--- How to add LSP for a specific language?
--- 1. use `:Mason` to install corresponding LSP
--- 2. add configuration below
--- lspconfig.pylsp.setup({
--- 	on_attach = on_attach,
--- })
+M.capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-vim.lsp.config('pylsp', {
-  settings = {
-    pylsp = {
-      plugins = {
-        pycodestyle = {
-          ignore = {'W391'},
-          maxLineLength = 100
-        }
-      }
-    }
-  }
-})
-
-
-vim.lsp.enable('docker_compose_language_service')
-vim.lsp.enable('kotlin_language_server')
-
+return M

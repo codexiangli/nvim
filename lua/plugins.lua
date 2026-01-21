@@ -1,3 +1,4 @@
+
 -- lazy.nvim 启动代码
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -15,12 +16,87 @@ vim.opt.rtp:prepend(lazypath)
 -- 插件配置
 require("lazy").setup({
   -- 主题
-  { "tanvirtin/monokai.nvim", lazy = false, priority = 1000 },
+  {
+    "loctvl842/monokai-pro.nvim",
+    name = "monokai-pro",
+    lazy = true,
+    priority = 1000,
+    opts = {
+      variant = "pro",
+      transparent_background = true,
+    },
+    config = function(_, opts)
+      require("monokai-pro").setup(opts)
+    end,
+  },
 
-  -- LSP
-  { "williamboman/mason.nvim" },
-  { "williamboman/mason-lspconfig.nvim" },
+  -- LSP Core & Setup
   { "neovim/nvim-lspconfig" },
+  {
+      "mason-org/mason.nvim",
+      opts = {
+          ui = {
+              icons = {
+                  package_installed = "✓",
+                  package_pending = "➜",
+                  package_uninstalled = "✗"
+              }
+          }
+      }
+  },
+  {
+      "mason-org/mason-lspconfig.nvim",
+      dependencies = { "mason-org/mason.nvim", "neovim/nvim-lspconfig" },
+      config = function()
+        local lsp_config = require('lsp')
+        require("mason-lspconfig").setup({
+          ensure_installed = { 'pylsp', 'lua_ls', 'rust_analyzer', 'kotlin_language_server', 'jdtls' },
+          handlers = {
+            -- Default handler for all servers EXCEPT jdtls
+            function(server_name)
+              if server_name == 'jdtls' then return end -- Skip jdtls, it's handled by nvim-jdtls
+              require("lspconfig")[server_name].setup({
+                on_attach = lsp_config.on_attach,
+                capabilities = lsp_config.capabilities,
+              })
+            end,
+            ["pylsp"] = function()
+              require("lspconfig").pylsp.setup({
+                on_attach = lsp_config.on_attach,
+                capabilities = lsp_config.capabilities,
+                settings = {
+                  pylsp = {
+                    plugins = {
+                      pycodestyle = {
+                        ignore = {"W391"},
+                        maxLineLength = 100,
+                      },
+                    },
+                  },
+                },
+              })
+            end,
+          },
+        })
+      end,
+  },
+
+  -- Java (jdtls) specific configuration
+  {
+    'mfussenegger/nvim-jdtls',
+    ft = 'java',
+    dependencies = { 'neovim/nvim-lspconfig' },
+    config = function()
+      local lsp_utils = require('lsp')
+      local jdtls = require('jdtls')
+      jdtls.start_or_attach({
+        cmd = { vim.fn.expand('~/.local/share/nvim/mason/bin/jdtls') },
+        root_dir = jdtls.setup.find_root({'gradlew', '.git', 'mvnw'}),
+        on_attach = lsp_utils.on_attach,
+        capabilities = lsp_utils.capabilities,
+      })
+    end,
+  },
 
   -- 补全
   {
@@ -67,7 +143,7 @@ require("lazy").setup({
     config = function()
       require("lualine").setup({
         options = {
-          theme = "monokai",
+          theme = "monokai-pro",
           component_separators = { left = '', right = ''},
           section_separators = { left = '', right = ''},
         },
@@ -91,47 +167,39 @@ require("lazy").setup({
   },
 
   -- Treesitter 配置
---  {
---    "nvim-treesitter/nvim-treesitter",
---    build = ":TSUpdate",
---    opts = {
---      ensure_installed = {
---        "lua", "python", "javascript", "typescript", "html", "css",
---        "json", "yaml", "markdown", "bash", "java", "kotlin",
---      },
---      highlight = { enable = true },
---      indent = { enable = true },
---      incremental_selection = {
---        enable = true,
---        keymaps = {
---          init_selection = "gnn",
---          node_incremental = "grn",
---          scope_incremental = "grc",
---          node_decremental = "grm",
---        },
---      },
---    },
---    config = function(_, opts)
---      require("nvim-treesitter.configs").setup(opts)
---    end,
---  },
---
+  {
+    "nvim-treesitter/nvim-treesitter",
+    lazy = false,
+    build = ":TSUpdate",
+    opts = {
+      ensure_installed = {
+        "lua", "python", "json", "yaml", "markdown", "bash", "java", "kotlin",
+      },
+      sync_install = true,
+      highlight = { enable = true },
+      indent = { enable = true },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = "gnn",
+          node_incremental = "grn",
+          scope_incremental = "grc",
+          node_decremental = "grm",
+        },
+      },
+    },
+    config = function(_, opts)
+      require("nvim-treesitter").setup(opts)
+    end,
+  },
+
   --  ============ 界面增强 ================
-
-  -- 启动界面
   { "goolord/alpha-nvim" },
-
-  -- 滚动条
   { "petertriho/nvim-scrollbar" },
-
-  -- 缩进线
   { "lukas-reineke/indent-blankline.nvim" },
-
-  -- 彩虹括号
   { "HiPhish/rainbow-delimiters.nvim" },
 
   -- ============ 编辑增强 ================
-  -- 快速注释
   {
     "tpope/vim-commentary",
     config = function()
@@ -141,7 +209,6 @@ require("lazy").setup({
     },
 
   -- ================  版本控制工具 =============
-  -- Git 状态显示
   {
     "lewis6991/gitsigns.nvim",
     config = function()
@@ -156,7 +223,6 @@ require("lazy").setup({
       })
     end
   },
-  -- Git 操作界面
   {
     "tpope/vim-fugitive",
     config = function()
@@ -165,7 +231,6 @@ require("lazy").setup({
       vim.keymap.set('n', '<leader>gp', ':Git push<CR>')
     end
   },
-  -- 差异查看
   { "sindrets/diffview.nvim" },
 
   -- 项目管理器
@@ -176,34 +241,17 @@ require("lazy").setup({
         detection_methods = { "pattern" },
         patterns = { ".git", "Makefile", "package.json", "pyproject.toml" },
       })
-
       vim.keymap.set('n', '<leader>pp', ':Telescope projects<CR>')
     end
   },
+
   -- 会话管理
-  -- {
-  --   "folke/persistence.nvim",
-  --   event = "BufReadPre",
-  --   config = function()
-  --     local persistence = require("persistence")
-  --     persistence.setup()
-
-  --     vim.keymap.set('n', '<leader>qs', function() persistence.load() end, { desc = "Restore session" })
-  --     vim.keymap.set('n', '<leader>ql', function() persistence.load({ last = true }) end, { desc = "Restore last session" })
-  --   end
-  -- },
-
   {
     "folke/persistence.nvim",
-    event = "BufReadPre", -- 或其他适合的事件
+    event = "BufReadPre",
     opts = {
-      -- 配置选项，例如：
-      -- 恢复会话的触发方式
       resume = true,
-      -- 设置保存文件时自动保存会话
       last_session = true,
-      -- 可以设置忽略特定文件类型
-      -- ignore = { "qf", "dap-repl", "terminal" },
     },
     config = function(_, opts)
       require("persistence").setup(opts)
@@ -215,23 +263,210 @@ require("lazy").setup({
     config = function()
       require("toggleterm").setup({
         size = 15,
-        open_mapping = [[<c-\>]],
+        open_mapping = [[<c-\\]],
         direction = "horizontal",
       })
-
-      -- 自定义终端命令
       local Terminal = require("toggleterm.terminal").Terminal
-
       local lazygit = Terminal:new({
         cmd = "lazygit",
         direction = "float",
         float_opts = { border = "rounded" },
         close_on_exit = false,
       })
-
       vim.keymap.set('n', '<leader>gg', function() lazygit:toggle() end)
     end
   },
 
+  -- Other plugins start here...
+  {
+    "mikavilpas/yazi.nvim",
+    version = "*",
+    event = "VeryLazy",
+    dependencies = {
+      { "nvim-lua/plenary.nvim", lazy = true },
+    },
+    keys = {
+      { "<leader>-", mode = { "n", "v" }, "<cmd>Yazi<cr>", desc = "Open yazi at the current file" },
+      { "<leader>cw", "<cmd>Yazi cwd<cr>", desc = "Open the file manager in nvim's working directory" },
+      { "<c-up>", "<cmd>Yazi toggle<cr>", desc = "Resume the last yazi session" },
+    },
+    opts = {
+      open_for_directories = false,
+      keymaps = { show_help = "<f1>" },
+    },
+    init = function()
+      vim.g.loaded_netrwPlugin = 1
+    end,
+  },
+  {
+    "yetone/avante.nvim",
+    build = vim.fn.has("win32") ~= 0 and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" or "make",
+    event = "VeryLazy",
+    version = false,
+    opts = {
+      provider = "gemini",
+      providers = {
+        openrouter = {
+            __inherited_from = "openai",
+            endpoint = "https://openrouter.ai/api/v1",
+            model = "google/gemini-2.5-flash",
+            timeout = 30000,
+            extra_request_body = {
+              temperature = 0.75,
+              max_tokens = 4096,
+            },
+        },
+        gemini = {
+          endpoint = "https://generativelanguage.googleapis.com/v1beta/models",
+          model = "gemini-2.5-pro",
+          timeout = 30000,
+          context_window = 1048576,
+          use_ReAct_prompt = true,
+          extra_request_body = {
+            generationConfig = { temperature = 0.75 },
+          },
+        },
+        claude = {
+          endpoint = "https://api.anthropic.com",
+          model = "claude-3-sonnet-20240229",
+          timeout = 30000,
+          extra_request_body = {
+            temperature = 0.75,
+            max_tokens = 4096,
+          },
+        },
+        moonshot = {
+          endpoint = "https://api.moonshot.ai/v1",
+          model = "moonshot-v1-32k",
+          timeout = 30000,
+          extra_request_body = {
+            temperature = 0.75,
+            max_tokens = 4096,
+          },
+        },
+      },
+    },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      "echasnovski/mini.pick",
+      "nvim-telescope/telescope.nvim",
+      "hrsh7th/nvim-cmp",
+      "ibhagwan/fzf-lua",
+      "nvim-tree/nvim-web-devicons",
+      "zbirenbaum/copilot.lua",
+      {
+        "HakonHarnes/img-clip.nvim",
+        event = "VeryLazy",
+        opts = {
+          default = {
+            embed_image_as_base64 = false,
+            prompt_for_file_name = false,
+            drag_and_drop = { insert_mode = true },
+            use_absolute_path = true,
+          },
+        },
+      },
+      {
+        'MeanderingProgrammer/render-markdown.nvim',
+        opts = { file_types = { "markdown", "Avante" } },
+        ft = { "markdown", "Avante" },
+      },
+    },
+  },
 
+
+  {
+      'saghen/blink.cmp',
+      dependencies = {
+          'Kaiser-Yang/blink-cmp-avante',
+          -- ... Other dependencies
+      },
+      opts = {
+        keymap = { preset = 'default' },
+        appearance = { nerd_font_variant = 'mono' },
+        completion = { documentation = { auto_show = true } },
+        fuzzy = { implementation = "prefer_rust_with_warning" },
+        sources = {
+            -- Add 'avante' to the list
+            default = { 'avante', 'lsp', 'path', 'snippets', 'buffer' },
+            snippets = { preset = 'luasnip' },
+            providers = {
+                avante = {
+                    module = 'blink-cmp-avante',
+                    name = 'Avante',
+                    opts = {
+                          -- options for blink-cmp-avante
+                    }
+                },
+            },
+          }
+      }
+  },
+
+  -- {
+  --   'saghen/blink.cmp',
+  --   dependencies = { 'rafamadriz/friendly-snippets' },
+  --   version = '1.*',
+  --   opts = {
+  --     keymap = { preset = 'default' },
+  --     appearance = { nerd_font_variant = 'mono' },
+  --     completion = { documentation = { auto_show = true } },
+  --     sources = { default = { 'lsp', 'path', 'snippets', 'buffer' } },
+  --     fuzzy = { implementation = "prefer_rust_with_warning" },
+  --   },
+  --   opts_extend = { "sources.default" },
+  -- },
+  {
+    "rcarriga/nvim-notify",
+    config = function()
+      require("notify").setup({
+        background_colour = "#1f2335",
+        stages = "fade",
+        timeout = 5000,
+      })
+      vim.notify = require("notify")
+    end,
+  },
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    opts = {},
+    dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
+    config = function()
+      require("noice").setup({
+        lsp = {
+          override = {
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+            ["vim.lsp.util.stylize_markdown"] = true,
+            ["cmp.entry.get_documentation"] = true,
+          },
+        },
+        presets = {
+          bottom_search = true,
+          command_palette = true,
+          long_message_to_split = true,
+          inc_rename = false,
+          lsp_doc_border = false,
+        },
+      })
+    end,
+  },
+  {
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    opts = {
+      modes = {
+        search = { enable = true },
+        char = { jump_labels = true },
+      },
+    },
+    keys = {
+      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+      { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+      { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+      { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+    },
+  },
 })
