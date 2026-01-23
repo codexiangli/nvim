@@ -23,11 +23,25 @@ require("lazy").setup({
     priority = 1000,
     opts = {
       variant = "pro",
-      transparent_background = true,
+      transparent_background = false,
     },
     config = function(_, opts)
       require("monokai-pro").setup(opts)
     end,
+  },
+
+  {
+    "folke/tokyonight.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {},
+  },
+
+  {
+    "rebelot/kanagawa.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {},
   },
 
   -- LSP Core & Setup
@@ -51,6 +65,7 @@ require("lazy").setup({
       dependencies = { "mason-org/mason.nvim", "neovim/nvim-lspconfig" },
       config = function()
         local lsp_config = require('lspconfig')
+        local lsp_utils = require('lsp')
         require("mason-lspconfig").setup({
           ensure_installed = { 'pylsp', 'pyright', 'lua_ls', 'rust_analyzer', 'kotlin_language_server', 'jdtls' },
           handlers = {
@@ -140,7 +155,11 @@ require("lazy").setup({
     "nvim-tree/nvim-tree.lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
-      require("nvim-tree").setup({ view = { width = 35 } })
+      require("nvim-tree").setup(
+          {
+              view = { width = 35 }
+          }
+      )
       vim.keymap.set('n', '<leader>t', ':NvimTreeToggle<CR>')
     end
   },
@@ -152,7 +171,7 @@ require("lazy").setup({
     config = function()
       require("lualine").setup({
         options = {
-          theme = "monokai-pro",
+          theme = "kanagawa",
           component_separators = { left = '', right = ''},
           section_separators = { left = '', right = ''},
         },
@@ -174,6 +193,7 @@ require("lazy").setup({
       })
     end
   },
+
 
   -- Treesitter 配置
   {
@@ -237,8 +257,8 @@ require("lazy").setup({
   -- 多光标编辑
   { "mg979/vim-visual-multi" },
 
-  -- 快速移动
-  { "ggandor/leap.nvim" },
+  -- 快速移动 使用flash替代
+  -- { "ggandor/leap.nvim" },
 
   -- ================  版本控制工具 =============
   {
