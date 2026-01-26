@@ -1,4 +1,3 @@
-
 -- This module is now simplified to only define and export LSP handlers and capabilities.
 -- The actual setup is handled by plugins in `plugins.lua`.
 
@@ -32,5 +31,111 @@ M.on_attach = function(client, bufnr)
 end
 
 M.capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+vim.diagnostic.config({
+    virtual_text = true
+})
+
+
+local lsp_config = require('lspconfig')
+require("mason-lspconfig").setup({
+    ensure_installed = { 'pylsp', 'pyright', 'lua_ls', 'rust_analyzer', 'kotlin_language_server', 'jdtls' },
+    handlers = {
+        -- Default handler for all servers EXCEPT jdtls
+        function(server_name)
+            if server_name == 'jdtls' then return end -- Skip jdtls, it's handled by nvim-jdtls
+            require("lspconfig")[server_name].setup({
+                on_attach = lsp_config.on_attach,
+                capabilities = lsp_config.capabilities,
+            })
+        end,
+        ["pyright"] = function()
+            require("lspconfig").pyright.setup({
+                on_attach = lsp_config.on_attach,
+                capabilities = lsp_config.capabilities,
+                filetypes = { "python" },
+            })
+        end,
+        ["pylsp"] = function()
+            require("lspconfig").pylsp.setup({
+                on_attach = lsp_config.on_attach,
+                capabilities = lsp_config.capabilities,
+                settings = {
+                    pylsp = {
+                        plugins = {
+                            pycodestyle = {
+                                ignore = { "W391" },
+                                maxLineLength = 100,
+                            },
+                        },
+                    },
+                },
+            })
+        end,
+        ["lua_rs"] = function()
+            require("lspconfig").lua_ls.setup({
+                on_attach = lsp_config.on_attach,
+                capabilities = lsp_config.capabilities,
+                settings = {
+                    Lua = {
+                        runtime = {
+                            -- Tell the language server which version of Lua you're using
+                            -- (most likely LuaJIT in the case of Neovim)
+                            version = 'LuaJIT',
+                        },
+                        diagnostics = {
+                            -- Get the language server to recognize the `vim` global
+                            globals = {
+                                'vim',
+                                'require'
+                            },
+                        },
+                        workspace = {
+                            -- Make the server aware of Neovim runtime files
+                            library = vim.api.nvim_get_runtime_file("", true),
+                        },
+                        -- Do not send telemetry data containing a randomized but unique identifier
+                        telemetry = {
+                            enable = false,
+                        },
+                    },
+                },
+
+            })
+        end
+    },
+})
+
+vim.lsp.enable('pyright')
+
+
+vim.lsp.config("lua_ls", {
+    settings = {
+        Lua = {
+            runtime = {
+                -- Tell the language server which version of Lua you're using
+                -- (most likely LuaJIT in the case of Neovim)
+                version = 'LuaJIT',
+            },
+            diagnostics = {
+                -- Get the language server to recognize the `vim` global
+                globals = {
+                    'vim',
+                    'require'
+                },
+            },
+            workspace = {
+                -- Make the server aware of Neovim runtime files
+                library = vim.api.nvim_get_runtime_file("", true),
+            },
+            -- Do not send telemetry data containing a randomized but unique identifier
+            telemetry = {
+                enable = false,
+            },
+        },
+    },
+})
+
+
 
 return M
