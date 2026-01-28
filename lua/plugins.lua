@@ -144,14 +144,14 @@ require("lazy").setup({
     },
 
     -- 补全
-    {
-        'hrsh7th/nvim-cmp',
-        dependencies = {
-            'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer', 'hrsh7th/cmp-path',
-            'hrsh7th/cmp-cmdline', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip'
-        },
-        config = function() require('config.nvim-cmp') end
-    },
+    -- {
+    --     'hrsh7th/nvim-cmp',
+    --     dependencies = {
+    --         'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer', 'hrsh7th/cmp-path',
+    --         'hrsh7th/cmp-cmdline', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip'
+    --     },
+    --     config = function() require('config.nvim-cmp') end
+    -- },
 
     -- Telescope 配置
     {
@@ -494,18 +494,67 @@ require("lazy").setup({
     {
         'saghen/blink.cmp',
         dependencies = {
+            "xzbdmw/colorful-menu.nvim",
+            'L3MON4D3/LuaSnip',
             'Kaiser-Yang/blink-cmp-avante',
             -- ... Other dependencies
         },
         opts = {
-            keymap = { preset = 'default' },
+            -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
+            -- 'super-tab' for mappings similar to vscode (tab to accept)
+            -- 'enter' for enter to accept
+            -- 'none' for no mappings
+            --
+            -- All presets have the following mappings:
+            -- C-space: Open menu or open docs if already open
+            -- C-n/C-p or Up/Down: Select next/previous item
+            -- C-e: Hide menu
+            -- C-k: Toggle signature help (if signature.enabled = true)
+            --
+            -- See :h blink-cmp-config-keymap for defining your own keymap
+            keymap = {
+                preset = 'super-tab',
+                ['<Up>'] = { 'select_prev', 'fallback' },
+                ['<Down>'] = { 'select_next', 'fallback' },
+                ['<C-p>'] = { 'select_prev', 'fallback_to_mappings' },
+                ['<C-n>'] = { 'select_next', 'fallback_to_mappings' },
+                ['<C-u>'] = { 'scroll_documentation_up', 'fallback' },
+                ['<C-d>'] = { 'scroll_documentation_down', 'fallback' },
+                ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
+            },
+
             appearance = { nerd_font_variant = 'mono' },
-            completion = { documentation = { auto_show = true } },
+
+            completion = {
+                documentation = {
+                    auto_show = true,
+                    auto_show_delay_ms = 500
+                },
+                menu = {
+                    draw = {
+                        columns = { { 'kind_icon' }, { 'label', gap = 1 } },
+                        components = {
+                            label = {
+                                text = function(ctx)
+                                    return require('colorful-menu').blink_components_text(ctx)
+                                end,
+                                hightlight = function(ctx)
+                                    return require('colorful-menu').blink_components_hightlight(ctx)
+                                end
+                            },
+                        },
+                    },
+                },
+            },
+
             fuzzy = { implementation = "prefer_rust_with_warning" },
+
+            -- Use a preset for snippets, check the snippets documentation for more information
+            snippets = { preset = 'luasnip' },
+
             sources = {
                 -- Add 'avante' to the list
                 default = { 'avante', 'lsp', 'path', 'snippets', 'buffer' },
-                -- snippets = { preset = 'luasnip' },
                 providers = {
                     avante = {
                         module = 'blink-cmp-avante',
@@ -539,8 +588,18 @@ require("lazy").setup({
                         vim.api.nvim_set_hl(0, 'BlinkCmpKindAvanteShortcut', { default = false, fg = '#89b4fa' }),
                     },
                 },
-            }
-        }
+
+            },
+
+            -- Experimental signature help support
+            signature = { enabled = true },
+
+            cmdline = {
+                keymap = { preset = 'inherit' },
+                completion = { menu = { auto_show = true } },
+            },
+
+        },
     },
 
 
@@ -558,30 +617,30 @@ require("lazy").setup({
     },
 
 
-    {
-        "folke/noice.nvim",
-        event = "VeryLazy",
-        opts = {},
-        dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
-        config = function()
-            require("noice").setup({
-                lsp = {
-                    override = {
-                        ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-                        ["vim.lsp.util.stylize_markdown"] = true,
-                        ["cmp.entry.get_documentation"] = true,
-                    },
-                },
-                presets = {
-                    bottom_search = true,
-                    command_palette = true,
-                    long_message_to_split = true,
-                    inc_rename = false,
-                    lsp_doc_border = false,
-                },
-            })
-        end,
-    },
+    -- {
+    --     "folke/noice.nvim",
+    --     event = "VeryLazy",
+    --     opts = {},
+    --     dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
+    --     config = function()
+    --         require("noice").setup({
+    --             lsp = {
+    --                 override = {
+    --                     ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+    --                     ["vim.lsp.util.stylize_markdown"] = true,
+    --                     ["cmp.entry.get_documentation"] = true,
+    --                 },
+    --             },
+    --             presets = {
+    --                 bottom_search = true,
+    --                 command_palette = true,
+    --                 long_message_to_split = true,
+    --                 inc_rename = false,
+    --                 lsp_doc_border = false,
+    --             },
+    --         })
+    --     end,
+    -- },
     {
         "folke/flash.nvim",
         event = "VeryLazy",
@@ -672,10 +731,56 @@ require("lazy").setup({
         event = 'InsertEnter',
         config = function()
             require('better_escape').setup({
-                mapping = { 'jk', 'kj' }, -- 多个映射
-                timeout = 300,   -- 超时时间
+                mapping = { 'jk', 'kj' },  -- 多个映射
+                timeout = 300,             -- 超时时间
                 clear_empty_lines = false, -- 是否清除空行
-                keys = '<Esc>',  -- 要发送的键
+                keys = '<Esc>',            -- 要发送的键
+            })
+        end,
+    },
+
+    -- 使用 noice.nvim 改进 UI
+    {
+        "folke/noice.nvim",
+        event = "VeryLazy",
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+            "rcarriga/nvim-notify",
+        },
+        config = function()
+            require("noice").setup({
+                lsp = {
+                    -- 覆盖 LSP 消息
+                    override = {
+                        ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+                        ["vim.lsp.util.stylize_markdown"] = true,
+                        ["cmp.entry.get_documentation"] = true,
+                    },
+                    hover = {
+                        enabled = true,
+                        silent = false, -- 悬停时静音
+                        view = "hover", -- 使用 hover 视图
+                        opts = {},      -- 全局 hover 选项
+                    },
+                    signature = {
+                        enabled = true,
+                        auto_open = {
+                            enabled = true,
+                            trigger = true, -- 自动打开签名帮助
+                            luasnip = true,
+                            throttle = 50,
+                        },
+                        view = "hover", -- 使用 hover 视图
+                        opts = {},
+                    },
+                },
+                presets = {
+                    bottom_search = true,
+                    command_palette = true,
+                    long_message_to_split = true,
+                    inc_rename = true,
+                    lsp_doc_border = true, -- 为文档添加边框
+                },
             })
         end,
     },
