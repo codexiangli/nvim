@@ -526,6 +526,12 @@ require("lazy").setup({
             appearance = { nerd_font_variant = 'mono' },
 
             completion = {
+                accept = {
+                    -- experimental auto-brackets support
+                    auto_brackets = {
+                        enabled = true,
+                    },
+                },
                 documentation = {
                     auto_show = true,
                     auto_show_delay_ms = 500
@@ -543,6 +549,7 @@ require("lazy").setup({
                                 end
                             },
                         },
+                        treesitter = { "lsp" },
                     },
                 },
             },
@@ -784,5 +791,6 @@ require("lazy").setup({
             })
         end,
     },
+
 
 })

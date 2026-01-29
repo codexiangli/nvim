@@ -24,3 +24,7 @@ telescope.setup({
 })
 
 require("ibl").setup()
+
+
+
+vim.opt.scrolloff = 10
