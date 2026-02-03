@@ -1,0 +1,120 @@
+return {
+    {
+        'saghen/blink.cmp',
+        dependencies = {
+            "xzbdmw/colorful-menu.nvim",
+            'L3MON4D3/LuaSnip',
+            'Kaiser-Yang/blink-cmp-avante',
+            -- ... Other dependencies
+        },
+        version = '1.*',
+        opts = {
+            -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
+            -- 'super-tab' for mappings similar to vscode (tab to accept)
+            -- 'enter' for enter to accept
+            -- 'none' for no mappings
+            --
+            -- All presets have the following mappings:
+            -- C-space: Open menu or open docs if already open
+            -- C-n/C-p or Up/Down: Select next/previous item
+            -- C-e: Hide menu
+            -- C-k: Toggle signature help (if signature.enabled = true)
+            --
+            -- See :h blink-cmp-config-keymap for defining your own keymap
+            keymap = {
+                preset = 'super-tab',
+                ['<Up>'] = { 'select_prev', 'fallback' },
+                ['<Down>'] = { 'select_next', 'fallback' },
+                ['<C-p>'] = { 'select_prev', 'fallback_to_mappings' },
+                ['<C-n>'] = { 'select_next', 'fallback_to_mappings' },
+                ['<C-u>'] = { 'scroll_documentation_up', 'fallback' },
+                ['<C-d>'] = { 'scroll_documentation_down', 'fallback' },
+                ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
+            },
+
+            appearance = { nerd_font_variant = 'mono' },
+
+            completion = {
+                accept = {
+                    -- experimental auto-brackets support
+                    auto_brackets = {
+                        enabled = true,
+                    },
+                },
+                documentation = {
+                    auto_show = true,
+                    auto_show_delay_ms = 500
+                },
+                menu = {
+                    draw = {
+                        columns = { { 'kind_icon' }, { 'label', gap = 1 } },
+                        components = {
+                            label = {
+                                text = function(ctx)
+                                    return require('colorful-menu').blink_components_text(ctx)
+                                end,
+                                hightlight = function(ctx)
+                                    return require('colorful-menu').blink_components_hightlight(ctx)
+                                end
+                            },
+                        },
+                        treesitter = { "lsp" },
+                    },
+                },
+            },
+
+            fuzzy = { implementation = "prefer_rust_with_warning" },
+
+            -- Use a preset for snippets, check the snippets documentation for more information
+            snippets = { preset = 'luasnip' },
+
+            sources = {
+                -- Add 'avante' to the list
+                default = { 'avante', 'lsp', 'path', 'snippets', 'buffer' },
+                providers = {
+                    avante = {
+                        module = 'blink-cmp-avante',
+                        name = 'Avante',
+                        opts = {
+                            -- options for blink-cmp-avante
+                        },
+                        vim.api.nvim_set_hl(0, 'BlinkCmpKindAvante', { default = false, fg = '#89b4fa' }),
+                        command = {
+                            get_kind_name = function(_)
+                                return 'AvanteCmd'
+                            end
+                        },
+                        mention = {
+                            get_kind_name = function(_)
+                                return 'AvanteMention'
+                            end
+                        },
+                        shortcut = {
+                            get_kind_name = function(_)
+                                return 'AvanteShortcut'
+                            end
+                        },
+                        kind_icons = {
+                            AvanteCmd = "",
+                            AvanteMention = "",
+                            AvanteShortcut = '',
+                        },
+                        vim.api.nvim_set_hl(0, 'BlinkCmpKindAvanteCmd', { default = false, fg = '#89b4fa' }),
+                        vim.api.nvim_set_hl(0, 'BlinkCmpKindAvanteMention', { default = false, fg = '#89b4fa' }),
+                        vim.api.nvim_set_hl(0, 'BlinkCmpKindAvanteShortcut', { default = false, fg = '#89b4fa' }),
+                    },
+                },
+
+            },
+
+            -- Experimental signature help support
+            signature = { enabled = true },
+
+            cmdline = {
+                keymap = { preset = 'inherit' },
+                completion = { menu = { auto_show = true } },
+            },
+
+        },
+    },
+}

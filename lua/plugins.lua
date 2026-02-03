@@ -1,803 +1,806 @@
--- lazy.nvim 启动代码
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-    vim.fn.system({
-        "git",
-        "clone",
-        "--filter=blob:none",
-        "https://github.com/folke/lazy.nvim.git",
-        "--branch=stable",
-        lazypath,
-    })
-end
-vim.opt.rtp:prepend(lazypath)
+return {
 
--- 插件配置
-require("lazy").setup({
-    -- 主题
-    {
-        "loctvl842/monokai-pro.nvim",
-        name = "monokai-pro",
-        lazy = true,
-        priority = 1000,
-        opts = {
-            variant = "pro",
-            transparent_background = false,
-        },
-        config = function(_, opts)
-            require("monokai-pro").setup(opts)
-        end,
-    },
+}
+-- -- lazy.nvim 启动代码
+-- local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+-- if not vim.loop.fs_stat(lazypath) then
+--     vim.fn.system({
+--         "git",
+--         "clone",
+--         "--filter=blob:none",
+--         "https://github.com/folke/lazy.nvim.git",
+--         "--branch=stable",
+--         lazypath,
+--     })
+-- end
+-- vim.opt.rtp:prepend(lazypath)
 
-    {
-        "folke/tokyonight.nvim",
-        lazy = false,
-        priority = 1000,
-        opts = {},
-    },
+-- -- 插件配置
+-- require("lazy").setup({
+--     -- 主题
+--     {
+--         "loctvl842/monokai-pro.nvim",
+--         name = "monokai-pro",
+--         lazy = true,
+--         priority = 1000,
+--         opts = {
+--             variant = "pro",
+--             transparent_background = false,
+--         },
+--         config = function(_, opts)
+--             require("monokai-pro").setup(opts)
+--         end,
+--     },
 
-    {
-        "rebelot/kanagawa.nvim",
-        lazy = false,
-        priority = 1000,
-        opts = {},
-    },
+--     {
+--         "folke/tokyonight.nvim",
+--         lazy = false,
+--         priority = 1000,
+--         opts = {},
+--     },
 
-    { "catppuccin/nvim",      name = "catppuccin", priority = 1000 },
+--     {
+--         "rebelot/kanagawa.nvim",
+--         lazy = false,
+--         priority = 1000,
+--         opts = {},
+--     },
 
-    {
-        "navarasu/onedark.nvim",
-        priority = 1000, -- make sure to load this before all the other start plugins
-        config = function()
-            require('onedark').setup {
-                style = 'darker'
-            }
-        end
-    },
+--     { "catppuccin/nvim",      name = "catppuccin", priority = 1000 },
 
-
-    {
-        "folke/neodev.nvim",
-        opts = {},
-        config = function()
-            require("neodev").setup({
-                -- add any options here, or leave empty to use the default settings
-            })
-        end
-    },
-
-    -- LSP Core & Setup
-    { "neovim/nvim-lspconfig" },
+--     {
+--         "navarasu/onedark.nvim",
+--         priority = 1000, -- make sure to load this before all the other start plugins
+--         config = function()
+--             require('onedark').setup {
+--                 style = 'darker'
+--             }
+--         end
+--     },
 
 
-    {
-        "mason-org/mason.nvim",
-        opts = {
-            ui = {
-                icons = {
-                    package_installed = "✓",
-                    package_pending = "➜",
-                    package_uninstalled = "✗"
-                }
-            }
-        }
-    },
-    {
-        "mason-org/mason-lspconfig.nvim",
-        dependencies = { "mason-org/mason.nvim", "neovim/nvim-lspconfig" },
-        -- config = function()
-        --   local lsp_config = require('lspconfig')
-        --   require("mason-lspconfig").setup({
-        --     ensure_installed = { 'pylsp', 'pyright', 'lua_ls', 'rust_analyzer', 'kotlin_language_server', 'jdtls' },
-        --     handlers = {
-        --       -- Default handler for all servers EXCEPT jdtls
-        --       function(server_name)
-        --         if server_name == 'jdtls' then return end -- Skip jdtls, it's handled by nvim-jdtls
-        --         require("lspconfig")[server_name].setup({
-        --           on_attach = lsp_config.on_attach,
-        --           capabilities = lsp_config.capabilities,
-        --         })
-        --       end,
-        --       ["pyright"] = function()
-        --           require("lspconfig").pyright.setup({
-        --               on_attach = lsp_config.on_attach,
-        --               capabilities = lsp_config.capabilities,
-        --               filetypes = {"python"},
-        --           })
-        --       end,
-        --       ["pylsp"] = function()
-        --         require("lspconfig").pylsp.setup({
-        --           on_attach = lsp_config.on_attach,
-        --           capabilities = lsp_config.capabilities,
-        --           settings = {
-        --             pylsp = {
-        --               plugins = {
-        --                 pycodestyle = {
-        --                   ignore = {"W391"},
-        --                   maxLineLength = 100,
-        --                 },
-        --               },
-        --             },
-        --           },
-        --         })
-        --       end,
-        --     },
-        --   })
-        -- end,
-    },
+--     {
+--         "folke/neodev.nvim",
+--         opts = {},
+--         config = function()
+--             require("neodev").setup({
+--                 -- add any options here, or leave empty to use the default settings
+--             })
+--         end
+--     },
 
-    -- Java (jdtls) specific configuration
-    {
-        'mfussenegger/nvim-jdtls',
-        ft = 'java',
-        dependencies = { 'neovim/nvim-lspconfig' },
-        -- config = function()
-        --   local lsp_utils = require('lsp')
-        --   local jdtls = require('jdtls')
-        --   jdtls.start_or_attach({
-        --     cmd = { vim.fn.expand('~/.local/share/nvim/mason/bin/jdtls') },
-        --     root_dir = jdtls.setup.find_root({'gradlew', '.git', 'mvnw'}),
-        --     on_attach = lsp_utils.on_attach,
-        --     capabilities = lsp_utils.capabilities,
-        --   })
-        -- end,
-    },
-
-    -- 补全
-    -- {
-    --     'hrsh7th/nvim-cmp',
-    --     dependencies = {
-    --         'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer', 'hrsh7th/cmp-path',
-    --         'hrsh7th/cmp-cmdline', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip'
-    --     },
-    --     config = function() require('config.nvim-cmp') end
-    -- },
-
-    -- Telescope 配置
-    {
-        "nvim-telescope/telescope.nvim",
-        dependencies = { "nvim-lua/plenary.nvim" },
-        config = function()
-            require("telescope").setup({
-                defaults = {
-                    layout_strategy = "vertical",
-                    layout_config = { height = 0.95 },
-                }
-            })
-            vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, {})
-            vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, {})
-            vim.keymap.set('n', '<leader>fb', require('telescope.builtin').buffers, {})
-            vim.keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags, {})
-        end
-    },
-
-    -- nvim-tree 配置
-    {
-        "nvim-tree/nvim-tree.lua",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "MunifTanjim/nui.nvim",
-            "nvim-tree/nvim-web-devicons", -- 可选但推荐
-        },
-        lazy = false,
-        opts = {
-            view = { width = 45 },
-            update_focused_file = {
-                enable = true,
-            },
-        },
-        config = function(_, opts)
-            require("nvim-tree").setup(opts)
-            vim.keymap.set('n', '<leader>t', ':NvimTreeToggle<CR>')
-        end
-    },
-
-    -- 状态栏配置
-    {
-        "nvim-lualine/lualine.nvim",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        config = function()
-            require("lualine").setup({
-                options = {
-                    theme = "auto",
-                    component_separators = { left = '', right = '' },
-                    section_separators = { left = '', right = '' },
-                },
-                sections = {
-                    lualine_a = { 'mode' },
-                    lualine_b = { 'branch', 'diff', 'diagnostics' },
-                    lualine_c = {
-                        'filename',
-                        {
-                            function() return vim.o.paste and 'PASTE' or '' end,
-                            color = { fg = '#ff5555' },
-                            padding = { left = 1, right = 0 },
-                        }
-                    },
-                    lualine_x = { 'encoding', 'fileformat', 'filetype' },
-                    lualine_y = { 'progress' },
-                    lualine_z = { 'location' }
-                },
-            })
-        end
-    },
+--     -- LSP Core & Setup
+--     { "neovim/nvim-lspconfig" },
 
 
-    -- Treesitter 配置
-    {
-        "nvim-treesitter/nvim-treesitter",
-        lazy = false,
-        build = ":TSUpdate",
-        opts = {
-            ensure_installed = {
-                "lua", "python", "json", "yaml", "markdown", "bash", "java", "kotlin",
-            },
-            sync_install = true,
-            highlight = { enable = true },
-            indent = { enable = true },
-            incremental_selection = {
-                enable = true,
-                keymaps = {
-                    init_selection = "gnn",
-                    node_incremental = "grn",
-                    scope_incremental = "grc",
-                    node_decremental = "grm",
-                },
-            },
-        },
-        config = function(_, opts)
-            require("nvim-treesitter").setup(opts)
-        end,
-    },
+--     {
+--         "mason-org/mason.nvim",
+--         opts = {
+--             ui = {
+--                 icons = {
+--                     package_installed = "✓",
+--                     package_pending = "➜",
+--                     package_uninstalled = "✗"
+--                 }
+--             }
+--         }
+--     },
+--     {
+--         "mason-org/mason-lspconfig.nvim",
+--         dependencies = { "mason-org/mason.nvim", "neovim/nvim-lspconfig" },
+--         -- config = function()
+--         --   local lsp_config = require('lspconfig')
+--         --   require("mason-lspconfig").setup({
+--         --     ensure_installed = { 'pylsp', 'pyright', 'lua_ls', 'rust_analyzer', 'kotlin_language_server', 'jdtls' },
+--         --     handlers = {
+--         --       -- Default handler for all servers EXCEPT jdtls
+--         --       function(server_name)
+--         --         if server_name == 'jdtls' then return end -- Skip jdtls, it's handled by nvim-jdtls
+--         --         require("lspconfig")[server_name].setup({
+--         --           on_attach = lsp_config.on_attach,
+--         --           capabilities = lsp_config.capabilities,
+--         --         })
+--         --       end,
+--         --       ["pyright"] = function()
+--         --           require("lspconfig").pyright.setup({
+--         --               on_attach = lsp_config.on_attach,
+--         --               capabilities = lsp_config.capabilities,
+--         --               filetypes = {"python"},
+--         --           })
+--         --       end,
+--         --       ["pylsp"] = function()
+--         --         require("lspconfig").pylsp.setup({
+--         --           on_attach = lsp_config.on_attach,
+--         --           capabilities = lsp_config.capabilities,
+--         --           settings = {
+--         --             pylsp = {
+--         --               plugins = {
+--         --                 pycodestyle = {
+--         --                   ignore = {"W391"},
+--         --                   maxLineLength = 100,
+--         --                 },
+--         --               },
+--         --             },
+--         --           },
+--         --         })
+--         --       end,
+--         --     },
+--         --   })
+--         -- end,
+--     },
 
-    --  ============ 界面增强 ================
-    { "goolord/alpha-nvim" },
-    { "petertriho/nvim-scrollbar" },
-    { "lukas-reineke/indent-blankline.nvim" },
-    { "HiPhish/rainbow-delimiters.nvim" },
+--     -- Java (jdtls) specific configuration
+--     {
+--         'mfussenegger/nvim-jdtls',
+--         ft = 'java',
+--         dependencies = { 'neovim/nvim-lspconfig' },
+--         -- config = function()
+--         --   local lsp_utils = require('lsp')
+--         --   local jdtls = require('jdtls')
+--         --   jdtls.start_or_attach({
+--         --     cmd = { vim.fn.expand('~/.local/share/nvim/mason/bin/jdtls') },
+--         --     root_dir = jdtls.setup.find_root({'gradlew', '.git', 'mvnw'}),
+--         --     on_attach = lsp_utils.on_attach,
+--         --     capabilities = lsp_utils.capabilities,
+--         --   })
+--         -- end,
+--     },
 
-    -- ============ 编辑增强 ================
-    {
-        "tpope/vim-commentary",
-        config = function()
-            vim.keymap.set('n', 'gcc', ':Commentary<CR>')
-            vim.keymap.set('v', 'gc', ':Commentary<CR>')
-        end
-    },
+--     -- 补全
+--     -- {
+--     --     'hrsh7th/nvim-cmp',
+--     --     dependencies = {
+--     --         'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer', 'hrsh7th/cmp-path',
+--     --         'hrsh7th/cmp-cmdline', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip'
+--     --     },
+--     --     config = function() require('config.nvim-cmp') end
+--     -- },
 
-    -- 环绕编辑
-    {
-        "tpope/vim-surround",
-        keys = {
-            { "cs", mode = "n" },          -- 更改环绕
-            { "ds", mode = "n" },          -- 删除环绕
-            { "ys", mode = { "n", "v" } }, -- 添加环绕
-        }
-    },
+--     -- Telescope 配置
+--     {
+--         "nvim-telescope/telescope.nvim",
+--         dependencies = { "nvim-lua/plenary.nvim" },
+--         config = function()
+--             require("telescope").setup({
+--                 defaults = {
+--                     layout_strategy = "vertical",
+--                     layout_config = { height = 0.95 },
+--                 }
+--             })
+--             vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, {})
+--             vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, {})
+--             vim.keymap.set('n', '<leader>fb', require('telescope.builtin').buffers, {})
+--             vim.keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags, {})
+--         end
+--     },
 
-    -- 自动配对
-    {
-        "windwp/nvim-autopairs",
-        event = "InsertEnter",
-        config = true
-    },
+--     -- nvim-tree 配置
+--     {
+--         "nvim-tree/nvim-tree.lua",
+--         dependencies = {
+--             "nvim-lua/plenary.nvim",
+--             "MunifTanjim/nui.nvim",
+--             "nvim-tree/nvim-web-devicons", -- 可选但推荐
+--         },
+--         lazy = false,
+--         opts = {
+--             view = { width = 45 },
+--             update_focused_file = {
+--                 enable = true,
+--             },
+--         },
+--         config = function(_, opts)
+--             require("nvim-tree").setup(opts)
+--             vim.keymap.set('n', '<leader>t', ':NvimTreeToggle<CR>')
+--         end
+--     },
 
-    -- 多光标编辑
-    { "mg979/vim-visual-multi" },
-
-    -- 快速移动 使用flash替代
-    -- { "ggandor/leap.nvim" },
-
-    -- ================  版本控制工具 =============
-    {
-        "lewis6991/gitsigns.nvim",
-        config = function()
-            require('gitsigns').setup {
-                signs = {
-                    add = { text = '┃' },
-                    change = { text = '┃' },
-                    delete = { text = '_' },
-                    topdelete = { text = '‾' },
-                    changedelete = { text = '~' },
-                    untracked = { text = '┆' },
-                },
-                signs_staged = {
-                    add = { text = '┃' },
-                    change = { text = '┃' },
-                    delete = { text = '_' },
-                    topdelete = { text = '‾' },
-                    changedelete = { text = '~' },
-                    untracked = { text = '┆' },
-                },
-                signs_staged_enable = true,
-                signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
-                numhl = false,     -- Toggle with `:Gitsigns toggle_numhl`
-                linehl = false,    -- Toggle with `:Gitsigns toggle_linehl`
-                word_diff = false, -- Toggle with `:Gitsigns toggle_word_diff`
-                watch_gitdir = {
-                    follow_files = true
-                },
-                auto_attach = true,
-                attach_to_untracked = false,
-                current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
-                current_line_blame_opts = {
-                    virt_text = true,
-                    virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
-                    delay = 1000,
-                    ignore_whitespace = false,
-                    virt_text_priority = 100,
-                    use_focus = true,
-                },
-                current_line_blame_formatter = '<author>, <author_time:%R> - <summary>',
-                sign_priority = 6,
-                update_debounce = 100,
-                status_formatter = nil,  -- Use default
-                max_file_length = 40000, -- Disable if file is longer than this (in lines)
-                preview_config = {
-                    -- Options passed to nvim_open_win
-                    style = 'minimal',
-                    relative = 'cursor',
-                    row = 0,
-                    col = 1
-                },
-            }
-        end
-    },
-
-    {
-        "tpope/vim-fugitive",
-        config = function()
-            vim.keymap.set('n', '<leader>gs', ':Git<CR>')
-            vim.keymap.set('n', '<leader>gc', ':Git commit<CR>')
-            vim.keymap.set('n', '<leader>gp', ':Git push<CR>')
-        end
-    },
-    { "sindrets/diffview.nvim" },
-
-    -- 项目管理器
-    {
-        "ahmedkhalf/project.nvim",
-        config = function()
-            require("project_nvim").setup({
-                detection_methods = { "pattern" },
-                patterns = { ".git", "Makefile", "package.json", "pyproject.toml" },
-            })
-            vim.keymap.set('n', '<leader>pp', ':Telescope projects<CR>')
-        end
-    },
-
-    -- 会话管理
-    {
-        "folke/persistence.nvim",
-        event = "BufReadPre",
-        opts = {
-            resume = true,
-            last_session = true,
-        },
-        config = function(_, opts)
-            require("persistence").setup(opts)
-        end,
-    },
-
-    {
-        "akinsho/toggleterm.nvim",
-        config = function()
-            require("toggleterm").setup({
-                size = 15,
-                open_mapping = [[<c-\>]],
-                direction = "horizontal",
-            })
-            local Terminal = require("toggleterm.terminal").Terminal
-            local lazygit = Terminal:new({
-                cmd = "lazygit",
-                direction = "float",
-                float_opts = { border = "rounded" },
-                close_on_exit = false,
-            })
-            vim.keymap.set('n', '<leader>gg', function() lazygit:toggle() end)
-        end
-    },
-
-    -- Other plugins start here...
-    {
-        "mikavilpas/yazi.nvim",
-        version = "*",
-        event = "VeryLazy",
-        dependencies = {
-            { "nvim-lua/plenary.nvim", lazy = true },
-        },
-        keys = {
-            { "<leader>-",  mode = { "n", "v" },    "<cmd>Yazi<cr>",                                           desc = "Open yazi at the current file" },
-            { "<leader>cw", "<cmd>Yazi cwd<cr>",    desc = "Open the file manager in nvim's working directory" },
-            { "<c-up>",     "<cmd>Yazi toggle<cr>", desc = "Resume the last yazi session" },
-        },
-        opts = {
-            open_for_directories = false,
-            keymaps = { show_help = "<f1>" },
-        },
-        init = function()
-            vim.g.loaded_netrwPlugin = 1
-        end,
-    },
-    {
-        "yetone/avante.nvim",
-        build = vim.fn.has("win32") ~= 0 and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" or
-            "make",
-        event = "VeryLazy",
-        version = false,
-        opts = {
-            provider = "gemini",
-            providers = {
-                openrouter = {
-                    __inherited_from = "openai",
-                    endpoint = "https://openrouter.ai/api/v1",
-                    model = "google/gemini-2.5-flash",
-                    timeout = 30000,
-                    extra_request_body = {
-                        temperature = 0.75,
-                        max_tokens = 4096,
-                    },
-                },
-                gemini = {
-                    endpoint = "https://generativelanguage.googleapis.com/v1beta/models",
-                    model = "gemini-2.5-pro",
-                    timeout = 30000,
-                    context_window = 1048576,
-                    use_ReAct_prompt = true,
-                    extra_request_body = {
-                        generationConfig = { temperature = 0.75 },
-                    },
-                },
-                claude = {
-                    endpoint = "https://api.anthropic.com",
-                    model = "claude-3-sonnet-20240229",
-                    timeout = 30000,
-                    extra_request_body = {
-                        temperature = 0.75,
-                        max_tokens = 4096,
-                    },
-                },
-                moonshot = {
-                    endpoint = "https://api.moonshot.ai/v1",
-                    model = "moonshot-v1-32k",
-                    timeout = 30000,
-                    extra_request_body = {
-                        temperature = 0.75,
-                        max_tokens = 4096,
-                    },
-                },
-            },
-        },
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "MunifTanjim/nui.nvim",
-            "echasnovski/mini.pick",
-            "nvim-telescope/telescope.nvim",
-            "hrsh7th/nvim-cmp",
-            "ibhagwan/fzf-lua",
-            "nvim-tree/nvim-web-devicons",
-            "zbirenbaum/copilot.lua",
-            {
-                "HakonHarnes/img-clip.nvim",
-                event = "VeryLazy",
-                opts = {
-                    default = {
-                        embed_image_as_base64 = false,
-                        prompt_for_file_name = false,
-                        drag_and_drop = { insert_mode = true },
-                        use_absolute_path = true,
-                    },
-                },
-            },
-            {
-                'MeanderingProgrammer/render-markdown.nvim',
-                opts = { file_types = { "markdown", "Avante" } },
-                ft = { "markdown", "Avante" },
-            },
-        },
-    },
+--     -- 状态栏配置
+--     {
+--         "nvim-lualine/lualine.nvim",
+--         dependencies = { "nvim-tree/nvim-web-devicons" },
+--         config = function()
+--             require("lualine").setup({
+--                 options = {
+--                     theme = "auto",
+--                     component_separators = { left = '', right = '' },
+--                     section_separators = { left = '', right = '' },
+--                 },
+--                 sections = {
+--                     lualine_a = { 'mode' },
+--                     lualine_b = { 'branch', 'diff', 'diagnostics' },
+--                     lualine_c = {
+--                         'filename',
+--                         {
+--                             function() return vim.o.paste and 'PASTE' or '' end,
+--                             color = { fg = '#ff5555' },
+--                             padding = { left = 1, right = 0 },
+--                         }
+--                     },
+--                     lualine_x = { 'encoding', 'fileformat', 'filetype' },
+--                     lualine_y = { 'progress' },
+--                     lualine_z = { 'location' }
+--                 },
+--             })
+--         end
+--     },
 
 
-    {
-        'saghen/blink.cmp',
-        dependencies = {
-            "xzbdmw/colorful-menu.nvim",
-            'L3MON4D3/LuaSnip',
-            'Kaiser-Yang/blink-cmp-avante',
-            -- ... Other dependencies
-        },
-        opts = {
-            -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
-            -- 'super-tab' for mappings similar to vscode (tab to accept)
-            -- 'enter' for enter to accept
-            -- 'none' for no mappings
-            --
-            -- All presets have the following mappings:
-            -- C-space: Open menu or open docs if already open
-            -- C-n/C-p or Up/Down: Select next/previous item
-            -- C-e: Hide menu
-            -- C-k: Toggle signature help (if signature.enabled = true)
-            --
-            -- See :h blink-cmp-config-keymap for defining your own keymap
-            keymap = {
-                preset = 'super-tab',
-                ['<Up>'] = { 'select_prev', 'fallback' },
-                ['<Down>'] = { 'select_next', 'fallback' },
-                ['<C-p>'] = { 'select_prev', 'fallback_to_mappings' },
-                ['<C-n>'] = { 'select_next', 'fallback_to_mappings' },
-                ['<C-u>'] = { 'scroll_documentation_up', 'fallback' },
-                ['<C-d>'] = { 'scroll_documentation_down', 'fallback' },
-                ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
-            },
+--     -- Treesitter 配置
+--     {
+--         "nvim-treesitter/nvim-treesitter",
+--         lazy = false,
+--         build = ":TSUpdate",
+--         opts = {
+--             ensure_installed = {
+--                 "lua", "python", "json", "yaml", "markdown", "bash", "java", "kotlin",
+--             },
+--             sync_install = true,
+--             highlight = { enable = true },
+--             indent = { enable = true },
+--             incremental_selection = {
+--                 enable = true,
+--                 keymaps = {
+--                     init_selection = "gnn",
+--                     node_incremental = "grn",
+--                     scope_incremental = "grc",
+--                     node_decremental = "grm",
+--                 },
+--             },
+--         },
+--         config = function(_, opts)
+--             require("nvim-treesitter").setup(opts)
+--         end,
+--     },
 
-            appearance = { nerd_font_variant = 'mono' },
+--     --  ============ 界面增强 ================
+--     { "goolord/alpha-nvim" },
+--     { "petertriho/nvim-scrollbar" },
+--     { "lukas-reineke/indent-blankline.nvim" },
+--     { "HiPhish/rainbow-delimiters.nvim" },
 
-            completion = {
-                accept = {
-                    -- experimental auto-brackets support
-                    auto_brackets = {
-                        enabled = true,
-                    },
-                },
-                documentation = {
-                    auto_show = true,
-                    auto_show_delay_ms = 500
-                },
-                menu = {
-                    draw = {
-                        columns = { { 'kind_icon' }, { 'label', gap = 1 } },
-                        components = {
-                            label = {
-                                text = function(ctx)
-                                    return require('colorful-menu').blink_components_text(ctx)
-                                end,
-                                hightlight = function(ctx)
-                                    return require('colorful-menu').blink_components_hightlight(ctx)
-                                end
-                            },
-                        },
-                        treesitter = { "lsp" },
-                    },
-                },
-            },
+--     -- ============ 编辑增强 ================
+--     {
+--         "tpope/vim-commentary",
+--         config = function()
+--             vim.keymap.set('n', 'gcc', ':Commentary<CR>')
+--             vim.keymap.set('v', 'gc', ':Commentary<CR>')
+--         end
+--     },
 
-            fuzzy = { implementation = "prefer_rust_with_warning" },
+--     -- 环绕编辑
+--     {
+--         "tpope/vim-surround",
+--         keys = {
+--             { "cs", mode = "n" },          -- 更改环绕
+--             { "ds", mode = "n" },          -- 删除环绕
+--             { "ys", mode = { "n", "v" } }, -- 添加环绕
+--         }
+--     },
 
-            -- Use a preset for snippets, check the snippets documentation for more information
-            snippets = { preset = 'luasnip' },
+--     -- 自动配对
+--     {
+--         "windwp/nvim-autopairs",
+--         event = "InsertEnter",
+--         config = true
+--     },
 
-            sources = {
-                -- Add 'avante' to the list
-                default = { 'avante', 'lsp', 'path', 'snippets', 'buffer' },
-                providers = {
-                    avante = {
-                        module = 'blink-cmp-avante',
-                        name = 'Avante',
-                        opts = {
-                            -- options for blink-cmp-avante
-                        },
-                        vim.api.nvim_set_hl(0, 'BlinkCmpKindAvante', { default = false, fg = '#89b4fa' }),
-                        command = {
-                            get_kind_name = function(_)
-                                return 'AvanteCmd'
-                            end
-                        },
-                        mention = {
-                            get_kind_name = function(_)
-                                return 'AvanteMention'
-                            end
-                        },
-                        shortcut = {
-                            get_kind_name = function(_)
-                                return 'AvanteShortcut'
-                            end
-                        },
-                        kind_icons = {
-                            AvanteCmd = "",
-                            AvanteMention = "",
-                            AvanteShortcut = '',
-                        },
-                        vim.api.nvim_set_hl(0, 'BlinkCmpKindAvanteCmd', { default = false, fg = '#89b4fa' }),
-                        vim.api.nvim_set_hl(0, 'BlinkCmpKindAvanteMention', { default = false, fg = '#89b4fa' }),
-                        vim.api.nvim_set_hl(0, 'BlinkCmpKindAvanteShortcut', { default = false, fg = '#89b4fa' }),
-                    },
-                },
+--     -- 多光标编辑
+--     { "mg979/vim-visual-multi" },
 
-            },
+--     -- 快速移动 使用flash替代
+--     -- { "ggandor/leap.nvim" },
 
-            -- Experimental signature help support
-            signature = { enabled = true },
+--     -- ================  版本控制工具 =============
+--     {
+--         "lewis6991/gitsigns.nvim",
+--         config = function()
+--             require('gitsigns').setup {
+--                 signs = {
+--                     add = { text = '┃' },
+--                     change = { text = '┃' },
+--                     delete = { text = '_' },
+--                     topdelete = { text = '‾' },
+--                     changedelete = { text = '~' },
+--                     untracked = { text = '┆' },
+--                 },
+--                 signs_staged = {
+--                     add = { text = '┃' },
+--                     change = { text = '┃' },
+--                     delete = { text = '_' },
+--                     topdelete = { text = '‾' },
+--                     changedelete = { text = '~' },
+--                     untracked = { text = '┆' },
+--                 },
+--                 signs_staged_enable = true,
+--                 signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
+--                 numhl = false,     -- Toggle with `:Gitsigns toggle_numhl`
+--                 linehl = false,    -- Toggle with `:Gitsigns toggle_linehl`
+--                 word_diff = false, -- Toggle with `:Gitsigns toggle_word_diff`
+--                 watch_gitdir = {
+--                     follow_files = true
+--                 },
+--                 auto_attach = true,
+--                 attach_to_untracked = false,
+--                 current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
+--                 current_line_blame_opts = {
+--                     virt_text = true,
+--                     virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
+--                     delay = 1000,
+--                     ignore_whitespace = false,
+--                     virt_text_priority = 100,
+--                     use_focus = true,
+--                 },
+--                 current_line_blame_formatter = '<author>, <author_time:%R> - <summary>',
+--                 sign_priority = 6,
+--                 update_debounce = 100,
+--                 status_formatter = nil,  -- Use default
+--                 max_file_length = 40000, -- Disable if file is longer than this (in lines)
+--                 preview_config = {
+--                     -- Options passed to nvim_open_win
+--                     style = 'minimal',
+--                     relative = 'cursor',
+--                     row = 0,
+--                     col = 1
+--                 },
+--             }
+--         end
+--     },
 
-            cmdline = {
-                keymap = { preset = 'inherit' },
-                completion = { menu = { auto_show = true } },
-            },
+--     {
+--         "tpope/vim-fugitive",
+--         config = function()
+--             vim.keymap.set('n', '<leader>gs', ':Git<CR>')
+--             vim.keymap.set('n', '<leader>gc', ':Git commit<CR>')
+--             vim.keymap.set('n', '<leader>gp', ':Git push<CR>')
+--         end
+--     },
+--     { "sindrets/diffview.nvim" },
 
-        },
-    },
+--     -- 项目管理器
+--     {
+--         "ahmedkhalf/project.nvim",
+--         config = function()
+--             require("project_nvim").setup({
+--                 detection_methods = { "pattern" },
+--                 patterns = { ".git", "Makefile", "package.json", "pyproject.toml" },
+--             })
+--             vim.keymap.set('n', '<leader>pp', ':Telescope projects<CR>')
+--         end
+--     },
 
+--     -- 会话管理
+--     {
+--         "folke/persistence.nvim",
+--         event = "BufReadPre",
+--         opts = {
+--             resume = true,
+--             last_session = true,
+--         },
+--         config = function(_, opts)
+--             require("persistence").setup(opts)
+--         end,
+--     },
 
+--     {
+--         "akinsho/toggleterm.nvim",
+--         config = function()
+--             require("toggleterm").setup({
+--                 size = 15,
+--                 open_mapping = [[<c-\>]],
+--                 direction = "horizontal",
+--             })
+--             local Terminal = require("toggleterm.terminal").Terminal
+--             local lazygit = Terminal:new({
+--                 cmd = "lazygit",
+--                 direction = "float",
+--                 float_opts = { border = "rounded" },
+--                 close_on_exit = false,
+--             })
+--             vim.keymap.set('n', '<leader>gg', function() lazygit:toggle() end)
+--         end
+--     },
 
-    {
-        "rcarriga/nvim-notify",
-        config = function()
-            -- require("notify").setup({
-            --   background_colour = "#1f2335",
-            --   stages = "fade",
-            --   timeout = 5000,
-            -- })
-            vim.notify = require("notify")
-        end,
-    },
-
-
-    -- {
-    --     "folke/noice.nvim",
-    --     event = "VeryLazy",
-    --     opts = {},
-    --     dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
-    --     config = function()
-    --         require("noice").setup({
-    --             lsp = {
-    --                 override = {
-    --                     ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-    --                     ["vim.lsp.util.stylize_markdown"] = true,
-    --                     ["cmp.entry.get_documentation"] = true,
-    --                 },
-    --             },
-    --             presets = {
-    --                 bottom_search = true,
-    --                 command_palette = true,
-    --                 long_message_to_split = true,
-    --                 inc_rename = false,
-    --                 lsp_doc_border = false,
-    --             },
-    --         })
-    --     end,
-    -- },
-    {
-        "folke/flash.nvim",
-        event = "VeryLazy",
-        opts = {
-            modes = {
-                search = { enable = true },
-                char = { jump_labels = true },
-            },
-        },
-        keys = {
-            { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
-            { "S",     mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
-            { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
-            { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-            { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
-        },
-    },
-    {
-        "folke/which-key.nvim",
-        event = "VeryLazy",
-        opts = {
-            -- your configuration comes here
-            -- or leave it empty to use the default settings
-            -- refer to the configuration section below
-        },
-        keys = {
-            {
-                "<leader>?",
-                function()
-                    require("which-key").show({ global = false })
-                end,
-                desc = "Buffer Local Keymaps (which-key)",
-            },
-        },
-    },
-
-    {
-        "folke/trouble.nvim",
-        opts = {}, -- for default options, refer to the configuration section for custom setup.
-        cmd = "Trouble",
-        keys = {
-            {
-                "<leader>xx",
-                "<cmd>Trouble diagnostics toggle<cr>",
-                desc = "Diagnostics (Trouble)",
-            },
-            {
-                "<leader>xX",
-                "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
-                desc = "Buffer Diagnostics (Trouble)",
-            },
-            {
-                "<leader>cs",
-                "<cmd>Trouble symbols toggle focus=false<cr>",
-                desc = "Symbols (Trouble)",
-            },
-            {
-                "<leader>cl",
-                "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
-                desc = "LSP Definitions / references / ... (Trouble)",
-            },
-            {
-                "<leader>xL",
-                "<cmd>Trouble loclist toggle<cr>",
-                desc = "Location List (Trouble)",
-            },
-            {
-                "<leader>xQ",
-                "<cmd>Trouble qflist toggle<cr>",
-                desc = "Quickfix List (Trouble)",
-            },
-        },
-    },
-
-    {
-        "folke/todo-comments.nvim",
-        dependencies = { "nvim-lua/plenary.nvim" },
-        opts = {
-            -- your configuration comes here
-            -- or leave it empty to use the default settings
-            -- refer to the configuration section below
-        }
-    },
-
-    -- 使用 lazy.nvim 安装
-    {
-        'jdhao/better-escape.nvim',
-        event = 'InsertEnter',
-        config = function()
-            require('better_escape').setup({
-                mapping = { 'jk', 'kj' },  -- 多个映射
-                timeout = 300,             -- 超时时间
-                clear_empty_lines = false, -- 是否清除空行
-                keys = '<Esc>',            -- 要发送的键
-            })
-        end,
-    },
-
-    -- 使用 noice.nvim 改进 UI
-    {
-        "folke/noice.nvim",
-        event = "VeryLazy",
-        dependencies = {
-            "MunifTanjim/nui.nvim",
-            "rcarriga/nvim-notify",
-        },
-        config = function()
-            require("noice").setup({
-                lsp = {
-                    -- 覆盖 LSP 消息
-                    override = {
-                        ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-                        ["vim.lsp.util.stylize_markdown"] = true,
-                        ["cmp.entry.get_documentation"] = true,
-                    },
-                    hover = {
-                        enabled = true,
-                        silent = false, -- 悬停时静音
-                        view = "hover", -- 使用 hover 视图
-                        opts = {},      -- 全局 hover 选项
-                    },
-                    signature = {
-                        enabled = true,
-                        auto_open = {
-                            enabled = true,
-                            trigger = true, -- 自动打开签名帮助
-                            luasnip = true,
-                            throttle = 50,
-                        },
-                        view = "hover", -- 使用 hover 视图
-                        opts = {},
-                    },
-                },
-                presets = {
-                    bottom_search = true,
-                    command_palette = true,
-                    long_message_to_split = true,
-                    inc_rename = true,
-                    lsp_doc_border = true, -- 为文档添加边框
-                },
-            })
-        end,
-    },
+--     -- Other plugins start here...
+--     {
+--         "mikavilpas/yazi.nvim",
+--         version = "*",
+--         event = "VeryLazy",
+--         dependencies = {
+--             { "nvim-lua/plenary.nvim", lazy = true },
+--         },
+--         keys = {
+--             { "<leader>-",  mode = { "n", "v" },    "<cmd>Yazi<cr>",                                           desc = "Open yazi at the current file" },
+--             { "<leader>cw", "<cmd>Yazi cwd<cr>",    desc = "Open the file manager in nvim's working directory" },
+--             { "<c-up>",     "<cmd>Yazi toggle<cr>", desc = "Resume the last yazi session" },
+--         },
+--         opts = {
+--             open_for_directories = false,
+--             keymaps = { show_help = "<f1>" },
+--         },
+--         init = function()
+--             vim.g.loaded_netrwPlugin = 1
+--         end,
+--     },
+--     {
+--         "yetone/avante.nvim",
+--         build = vim.fn.has("win32") ~= 0 and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" or
+--             "make",
+--         event = "VeryLazy",
+--         version = false,
+--         opts = {
+--             provider = "gemini",
+--             providers = {
+--                 openrouter = {
+--                     __inherited_from = "openai",
+--                     endpoint = "https://openrouter.ai/api/v1",
+--                     model = "google/gemini-2.5-flash",
+--                     timeout = 30000,
+--                     extra_request_body = {
+--                         temperature = 0.75,
+--                         max_tokens = 4096,
+--                     },
+--                 },
+--                 gemini = {
+--                     endpoint = "https://generativelanguage.googleapis.com/v1beta/models",
+--                     model = "gemini-2.5-pro",
+--                     timeout = 30000,
+--                     context_window = 1048576,
+--                     use_ReAct_prompt = true,
+--                     extra_request_body = {
+--                         generationConfig = { temperature = 0.75 },
+--                     },
+--                 },
+--                 claude = {
+--                     endpoint = "https://api.anthropic.com",
+--                     model = "claude-3-sonnet-20240229",
+--                     timeout = 30000,
+--                     extra_request_body = {
+--                         temperature = 0.75,
+--                         max_tokens = 4096,
+--                     },
+--                 },
+--                 moonshot = {
+--                     endpoint = "https://api.moonshot.ai/v1",
+--                     model = "moonshot-v1-32k",
+--                     timeout = 30000,
+--                     extra_request_body = {
+--                         temperature = 0.75,
+--                         max_tokens = 4096,
+--                     },
+--                 },
+--             },
+--         },
+--         dependencies = {
+--             "nvim-lua/plenary.nvim",
+--             "MunifTanjim/nui.nvim",
+--             "echasnovski/mini.pick",
+--             "nvim-telescope/telescope.nvim",
+--             "hrsh7th/nvim-cmp",
+--             "ibhagwan/fzf-lua",
+--             "nvim-tree/nvim-web-devicons",
+--             "zbirenbaum/copilot.lua",
+--             {
+--                 "HakonHarnes/img-clip.nvim",
+--                 event = "VeryLazy",
+--                 opts = {
+--                     default = {
+--                         embed_image_as_base64 = false,
+--                         prompt_for_file_name = false,
+--                         drag_and_drop = { insert_mode = true },
+--                         use_absolute_path = true,
+--                     },
+--                 },
+--             },
+--             {
+--                 'MeanderingProgrammer/render-markdown.nvim',
+--                 opts = { file_types = { "markdown", "Avante" } },
+--                 ft = { "markdown", "Avante" },
+--             },
+--         },
+--     },
 
 
-})
+--     {
+--         'saghen/blink.cmp',
+--         dependencies = {
+--             "xzbdmw/colorful-menu.nvim",
+--             'L3MON4D3/LuaSnip',
+--             'Kaiser-Yang/blink-cmp-avante',
+--             -- ... Other dependencies
+--         },
+--         opts = {
+--             -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
+--             -- 'super-tab' for mappings similar to vscode (tab to accept)
+--             -- 'enter' for enter to accept
+--             -- 'none' for no mappings
+--             --
+--             -- All presets have the following mappings:
+--             -- C-space: Open menu or open docs if already open
+--             -- C-n/C-p or Up/Down: Select next/previous item
+--             -- C-e: Hide menu
+--             -- C-k: Toggle signature help (if signature.enabled = true)
+--             --
+--             -- See :h blink-cmp-config-keymap for defining your own keymap
+--             keymap = {
+--                 preset = 'super-tab',
+--                 ['<Up>'] = { 'select_prev', 'fallback' },
+--                 ['<Down>'] = { 'select_next', 'fallback' },
+--                 ['<C-p>'] = { 'select_prev', 'fallback_to_mappings' },
+--                 ['<C-n>'] = { 'select_next', 'fallback_to_mappings' },
+--                 ['<C-u>'] = { 'scroll_documentation_up', 'fallback' },
+--                 ['<C-d>'] = { 'scroll_documentation_down', 'fallback' },
+--                 ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
+--             },
+
+--             appearance = { nerd_font_variant = 'mono' },
+
+--             completion = {
+--                 accept = {
+--                     -- experimental auto-brackets support
+--                     auto_brackets = {
+--                         enabled = true,
+--                     },
+--                 },
+--                 documentation = {
+--                     auto_show = true,
+--                     auto_show_delay_ms = 500
+--                 },
+--                 menu = {
+--                     draw = {
+--                         columns = { { 'kind_icon' }, { 'label', gap = 1 } },
+--                         components = {
+--                             label = {
+--                                 text = function(ctx)
+--                                     return require('colorful-menu').blink_components_text(ctx)
+--                                 end,
+--                                 hightlight = function(ctx)
+--                                     return require('colorful-menu').blink_components_hightlight(ctx)
+--                                 end
+--                             },
+--                         },
+--                         treesitter = { "lsp" },
+--                     },
+--                 },
+--             },
+
+--             fuzzy = { implementation = "prefer_rust_with_warning" },
+
+--             -- Use a preset for snippets, check the snippets documentation for more information
+--             snippets = { preset = 'luasnip' },
+
+--             sources = {
+--                 -- Add 'avante' to the list
+--                 default = { 'avante', 'lsp', 'path', 'snippets', 'buffer' },
+--                 providers = {
+--                     avante = {
+--                         module = 'blink-cmp-avante',
+--                         name = 'Avante',
+--                         opts = {
+--                             -- options for blink-cmp-avante
+--                         },
+--                         vim.api.nvim_set_hl(0, 'BlinkCmpKindAvante', { default = false, fg = '#89b4fa' }),
+--                         command = {
+--                             get_kind_name = function(_)
+--                                 return 'AvanteCmd'
+--                             end
+--                         },
+--                         mention = {
+--                             get_kind_name = function(_)
+--                                 return 'AvanteMention'
+--                             end
+--                         },
+--                         shortcut = {
+--                             get_kind_name = function(_)
+--                                 return 'AvanteShortcut'
+--                             end
+--                         },
+--                         kind_icons = {
+--                             AvanteCmd = "",
+--                             AvanteMention = "",
+--                             AvanteShortcut = '',
+--                         },
+--                         vim.api.nvim_set_hl(0, 'BlinkCmpKindAvanteCmd', { default = false, fg = '#89b4fa' }),
+--                         vim.api.nvim_set_hl(0, 'BlinkCmpKindAvanteMention', { default = false, fg = '#89b4fa' }),
+--                         vim.api.nvim_set_hl(0, 'BlinkCmpKindAvanteShortcut', { default = false, fg = '#89b4fa' }),
+--                     },
+--                 },
+
+--             },
+
+--             -- Experimental signature help support
+--             signature = { enabled = true },
+
+--             cmdline = {
+--                 keymap = { preset = 'inherit' },
+--                 completion = { menu = { auto_show = true } },
+--             },
+
+--         },
+--     },
+
+
+
+--     {
+--         "rcarriga/nvim-notify",
+--         config = function()
+--             -- require("notify").setup({
+--             --   background_colour = "#1f2335",
+--             --   stages = "fade",
+--             --   timeout = 5000,
+--             -- })
+--             vim.notify = require("notify")
+--         end,
+--     },
+
+
+--     -- {
+--     --     "folke/noice.nvim",
+--     --     event = "VeryLazy",
+--     --     opts = {},
+--     --     dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
+--     --     config = function()
+--     --         require("noice").setup({
+--     --             lsp = {
+--     --                 override = {
+--     --                     ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+--     --                     ["vim.lsp.util.stylize_markdown"] = true,
+--     --                     ["cmp.entry.get_documentation"] = true,
+--     --                 },
+--     --             },
+--     --             presets = {
+--     --                 bottom_search = true,
+--     --                 command_palette = true,
+--     --                 long_message_to_split = true,
+--     --                 inc_rename = false,
+--     --                 lsp_doc_border = false,
+--     --             },
+--     --         })
+--     --     end,
+--     -- },
+--     {
+--         "folke/flash.nvim",
+--         event = "VeryLazy",
+--         opts = {
+--             modes = {
+--                 search = { enable = true },
+--                 char = { jump_labels = true },
+--             },
+--         },
+--         keys = {
+--             { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
+--             { "S",     mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
+--             { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
+--             { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+--             { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
+--         },
+--     },
+--     {
+--         "folke/which-key.nvim",
+--         event = "VeryLazy",
+--         opts = {
+--             -- your configuration comes here
+--             -- or leave it empty to use the default settings
+--             -- refer to the configuration section below
+--         },
+--         keys = {
+--             {
+--                 "<leader>?",
+--                 function()
+--                     require("which-key").show({ global = false })
+--                 end,
+--                 desc = "Buffer Local Keymaps (which-key)",
+--             },
+--         },
+--     },
+
+--     {
+--         "folke/trouble.nvim",
+--         opts = {}, -- for default options, refer to the configuration section for custom setup.
+--         cmd = "Trouble",
+--         keys = {
+--             {
+--                 "<leader>xx",
+--                 "<cmd>Trouble diagnostics toggle<cr>",
+--                 desc = "Diagnostics (Trouble)",
+--             },
+--             {
+--                 "<leader>xX",
+--                 "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+--                 desc = "Buffer Diagnostics (Trouble)",
+--             },
+--             {
+--                 "<leader>cs",
+--                 "<cmd>Trouble symbols toggle focus=false<cr>",
+--                 desc = "Symbols (Trouble)",
+--             },
+--             {
+--                 "<leader>cl",
+--                 "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+--                 desc = "LSP Definitions / references / ... (Trouble)",
+--             },
+--             {
+--                 "<leader>xL",
+--                 "<cmd>Trouble loclist toggle<cr>",
+--                 desc = "Location List (Trouble)",
+--             },
+--             {
+--                 "<leader>xQ",
+--                 "<cmd>Trouble qflist toggle<cr>",
+--                 desc = "Quickfix List (Trouble)",
+--             },
+--         },
+--     },
+
+--     {
+--         "folke/todo-comments.nvim",
+--         dependencies = { "nvim-lua/plenary.nvim" },
+--         opts = {
+--             -- your configuration comes here
+--             -- or leave it empty to use the default settings
+--             -- refer to the configuration section below
+--         }
+--     },
+
+--     -- 使用 lazy.nvim 安装
+--     {
+--         'jdhao/better-escape.nvim',
+--         event = 'InsertEnter',
+--         config = function()
+--             require('better_escape').setup({
+--                 mapping = { 'jk', 'kj' },  -- 多个映射
+--                 timeout = 300,             -- 超时时间
+--                 clear_empty_lines = false, -- 是否清除空行
+--                 keys = '<Esc>',            -- 要发送的键
+--             })
+--         end,
+--     },
+
+--     -- 使用 noice.nvim 改进 UI
+--     {
+--         "folke/noice.nvim",
+--         event = "VeryLazy",
+--         dependencies = {
+--             "MunifTanjim/nui.nvim",
+--             "rcarriga/nvim-notify",
+--         },
+--         config = function()
+--             require("noice").setup({
+--                 lsp = {
+--                     -- 覆盖 LSP 消息
+--                     override = {
+--                         ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+--                         ["vim.lsp.util.stylize_markdown"] = true,
+--                         ["cmp.entry.get_documentation"] = true,
+--                     },
+--                     hover = {
+--                         enabled = true,
+--                         silent = false, -- 悬停时静音
+--                         view = "hover", -- 使用 hover 视图
+--                         opts = {},      -- 全局 hover 选项
+--                     },
+--                     signature = {
+--                         enabled = true,
+--                         auto_open = {
+--                             enabled = true,
+--                             trigger = true, -- 自动打开签名帮助
+--                             luasnip = true,
+--                             throttle = 50,
+--                         },
+--                         view = "hover", -- 使用 hover 视图
+--                         opts = {},
+--                     },
+--                 },
+--                 presets = {
+--                     bottom_search = true,
+--                     command_palette = true,
+--                     long_message_to_split = true,
+--                     inc_rename = true,
+--                     lsp_doc_border = true, -- 为文档添加边框
+--                 },
+--             })
+--         end,
+--     },
+
+
+-- })

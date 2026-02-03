@@ -35,6 +35,17 @@ vim.keymap.set('n', '<C-l>', '<C-w>l', opts)
 -- 自己添加的快捷键
 vim.keymap.set('n', '<F2>', ':set invpaste<CR>', { silent = true, noremap = true })
 
+-- 插入模式光标移动
+vim.keymap.set('i', '<C-h>', '<Left>')
+vim.keymap.set('i', '<C-l>', '<Right>')
+vim.keymap.set('i', '<C-j>', '<Down>')
+vim.keymap.set('i', '<C-k>', '<Up>')
+
+vim.keymap.set({'n', 'x'}, 'Q', '<CMD>:qa<CR>')
+vim.keymap.set({'n', 'x'}, 'qq', '<CMD>:q<CR>')
+
+
+
 -- lua 运行
 vim.keymap.set("n", "<space><space>x", "<cmd>source %<CR>")
 vim.keymap.set("n", "<space>x", ":.lua<CR>")
