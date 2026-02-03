@@ -174,13 +174,20 @@ require("lazy").setup({
     -- nvim-tree 配置
     {
         "nvim-tree/nvim-tree.lua",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        config = function()
-            require("nvim-tree").setup(
-                {
-                    view = { width = 35 }
-                }
-            )
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "MunifTanjim/nui.nvim",
+            "nvim-tree/nvim-web-devicons", -- 可选但推荐
+        },
+        lazy = false,
+        opts = {
+            view = { width = 45 },
+            update_focused_file = {
+                enable = true,
+            },
+        },
+        config = function(_, opts)
+            require("nvim-tree").setup(opts)
             vim.keymap.set('n', '<leader>t', ':NvimTreeToggle<CR>')
         end
     },

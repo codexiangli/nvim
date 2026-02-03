@@ -42,7 +42,6 @@ require("mason-lspconfig").setup({
 
 
 vim.lsp.config.clangd = {
-    capabilities = capabilities,
     cmd = {
         "clangd",
         "--background-index",
@@ -84,6 +83,8 @@ vim.lsp.config.clangd = {
         client.server_capabilities.documentRangeFormattingProvider = false
     end,
 }
+
+vim.lsp.enable({'pylsp'})
 
 vim.lsp.enable({ 'pyright' })
 
