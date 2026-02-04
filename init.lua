@@ -1,3 +1,5 @@
+vim.opt.termguicolors = true
+
 require('options')
 require('keymaps')
 -- require('plugins')

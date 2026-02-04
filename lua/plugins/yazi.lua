@@ -6,6 +6,7 @@ return {
         event = "VeryLazy",
         dependencies = {
             { "nvim-lua/plenary.nvim", lazy = true },
+            { "folke/snacks.nvim" }
         },
         keys = {
             { "<leader>-",  mode = { "n", "v" },    "<cmd>Yazi<cr>",                                           desc = "Open yazi at the current file" },
