@@ -1,4 +1,5 @@
 vim.opt.termguicolors = true
+vim.opt.jumpoptions = {'stack'}
 
 require('options')
 require('keymaps')
