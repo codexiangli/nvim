@@ -14,7 +14,6 @@ return {
                 float_opts = { border = "rounded" },
                 close_on_exit = false,
             })
-            vim.keymap.set('n', '<leader>gg', function() lazygit:toggle() end)
         end
     },
 }

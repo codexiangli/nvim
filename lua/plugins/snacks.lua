@@ -130,7 +130,7 @@ return {
             -- Top Pickers & Explorer
             { "<leader><space>", function() require("snacks").picker.smart() end,                 desc = "[Snacks] Smart find files" },
             { "<leader>,",       function() require("snacks").picker.buffers() end,               desc = "[Snacks] Buffers" },
-            { "<leader>sn",      function() require("snacks").picker.notifications() end,         desc = "[Snacks] Notification history" },
+            -- { "<leader>sn",      function() require("snacks").picker.notifications() end,         desc = "[Snacks] Notification history" },
             -- find
             { "<leader>sb",      function() require("snacks").picker.buffers() end,               desc = "[Snacks] Buffers" },
             { "<leader>sf",      function() require("snacks").picker.files() end,                 desc = "[Snacks] Find files" },

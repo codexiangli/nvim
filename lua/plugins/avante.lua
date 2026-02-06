@@ -6,12 +6,14 @@ return {
         event = "VeryLazy",
         version = false,
         opts = {
-            provider = "gemini",
+            provider = "openrouter",
             providers = {
                 openrouter = {
                     __inherited_from = "openai",
                     endpoint = "https://openrouter.ai/api/v1",
-                    model = "google/gemini-2.5-flash",
+                    -- model = "google/gemini-2.5-flash",
+                    -- model = "anthropic/claude-sonnet-4.5",
+                    model = "anthropic/claude-opus-4.5",
                     timeout = 30000,
                     extra_request_body = {
                         temperature = 0.75,
