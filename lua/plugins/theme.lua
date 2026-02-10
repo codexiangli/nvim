@@ -1,44 +1,44 @@
 return {
-    -- 主题
-    {
-        "loctvl842/monokai-pro.nvim",
-        name = "monokai-pro",
-        lazy = true,
-        priority = 1000,
-        opts = {
-            variant = "pro",
-            transparent_background = false,
-        },
-        config = function(_, opts)
-            require("monokai-pro").setup(opts)
-        end,
-    },
+	-- 主题
+	{
+		"loctvl842/monokai-pro.nvim",
+		name = "monokai-pro",
+		lazy = true,
+		priority = 1000,
+		opts = {
+			variant = "pro",
+			transparent_background = false,
+		},
+		config = function(_, opts)
+			require("monokai-pro").setup(opts)
+		end,
+	},
 
-    {
-        "folke/tokyonight.nvim",
-        lazy = false,
-        priority = 1000,
-        opts = {},
-    },
+	{
+		"folke/tokyonight.nvim",
+		lazy = false,
+		priority = 1000,
+		opts = {},
+	},
 
-    {
-        "rebelot/kanagawa.nvim",
-        lazy = false,
-        priority = 1000,
-        opts = {},
-    },
+	{
+		"rebelot/kanagawa.nvim",
+		lazy = false,
+		priority = 1000,
+		opts = {},
+	},
 
-    {
-        "catppuccin/nvim",
-        name = "catppuccin",
-        priority = 1000,
-        opts = {
-            transparent_background = true,
-            float = {
-                transparent = true, -- enable transparent floating windows
-            },
+	{
+		"catppuccin/nvim",
+		name = "catppuccin",
+		priority = 1000,
+		opts = {
+			transparent_background = true,
+			float = {
+				transparent = true, -- enable transparent floating windows
+			},
 
-            custom_highlights = function(colors)
+			custom_highlights = function(colors)
                 -- stylua: ignore
                 return {
                     LineNr     = { fg = colors.surface2 },
@@ -48,41 +48,40 @@ return {
                     CurSearch  = { bg = colors.mauve },
                     MatchParen = { bg = colors.mauve, fg = colors.base, bold = true },
                 }
-            end,
-            integrations = {
-                barbar = true,
-                blink_cmp = true,
-                gitsigns = true,
-                mason = true,
-                noice = true,
-                nvimtree = true,
-                rainbow_delimiters = true,
-                snacks = {
-                    enabled = true,
-                    indent_scope_color = "flamingo", -- catppuccin color (eg. `lavender`) Default: text
-                },
-                which_key = true,
-                flash = true,
-                lsp_trouble = true,
-                dap = true,
-                dap_ui = true,
-            },
-        },
-        config = function(_, opts)
-            require("catppuccin").setup(opts)
+			end,
+			integrations = {
+				barbar = true,
+				blink_cmp = true,
+				gitsigns = true,
+				mason = true,
+				noice = true,
+				nvimtree = true,
+				rainbow_delimiters = true,
+				snacks = {
+					enabled = true,
+					indent_scope_color = "flamingo", -- catppuccin color (eg. `lavender`) Default: text
+				},
+				which_key = true,
+				flash = true,
+				lsp_trouble = true,
+				dap = true,
+				dap_ui = true,
+			},
+		},
+		config = function(_, opts)
+			require("catppuccin").setup(opts)
 
-            vim.cmd.colorscheme("catppuccin")
-        end,
-    },
+			vim.cmd.colorscheme("catppuccin")
+		end,
+	},
 
-    {
-        "navarasu/onedark.nvim",
-        priority = 1000, -- make sure to load this before all the other start plugins
-        config = function()
-            require('onedark').setup {
-                style = 'darker'
-            }
-        end
-    },
-
+	{
+		"navarasu/onedark.nvim",
+		priority = 1000, -- make sure to load this before all the other start plugins
+		config = function()
+			require("onedark").setup({
+				style = "darker",
+			})
+		end,
+	},
 }

@@ -3,13 +3,10 @@ vim.g.mapleader = " "
 
 local opts = {
 
-    noremap = true, -- non-recursive
+	noremap = true, -- non-recursive
 
-    silent = true,  -- do not show message
-
+	silent = true, -- do not show message
 }
-
-
 
 -----------------
 
@@ -17,75 +14,66 @@ local opts = {
 
 -----------------
 
-
-
 -- Hint: see `:h vim.map.set()`
 
 -- Better window navigation
 
-vim.keymap.set('n', '<C-h>', '<C-w>h', opts)
+vim.keymap.set("n", "<C-h>", "<C-w>h", opts)
 
-vim.keymap.set('n', '<C-j>', '<C-w>j', opts)
+vim.keymap.set("n", "<C-j>", "<C-w>j", opts)
 
-vim.keymap.set('n', '<C-k>', '<C-w>k', opts)
+vim.keymap.set("n", "<C-k>", "<C-w>k", opts)
 
-vim.keymap.set('n', '<C-l>', '<C-w>l', opts)
-
+vim.keymap.set("n", "<C-l>", "<C-w>l", opts)
 
 -- 自己添加的快捷键
-vim.keymap.set('n', '<F2>', ':set invpaste<CR>', { silent = true, noremap = true })
+vim.keymap.set("n", "<F2>", ":set invpaste<CR>", { silent = true, noremap = true })
 
 -- 插入模式光标移动
-vim.keymap.set('i', '<C-h>', '<Left>')
-vim.keymap.set('i', '<C-l>', '<Right>')
-vim.keymap.set('i', '<C-j>', '<Down>')
-vim.keymap.set('i', '<C-k>', '<Up>')
+vim.keymap.set("i", "<C-h>", "<Left>")
+vim.keymap.set("i", "<C-l>", "<Right>")
+vim.keymap.set("i", "<C-j>", "<Down>")
+vim.keymap.set("i", "<C-k>", "<Up>")
 
-vim.keymap.set({'n', 'x'}, 'Q', '<CMD>:qa<CR>')
-vim.keymap.set({'n', 'x'}, 'qq', '<CMD>:q<CR>')
-
-
+vim.keymap.set({ "n", "x" }, "Q", "<CMD>:qa<CR>")
+vim.keymap.set({ "n", "x" }, "qq", "<CMD>:q<CR>")
 
 -- lua 运行
 vim.keymap.set("n", "<space><space>x", "<cmd>source %<CR>")
 vim.keymap.set("n", "<space>x", ":.lua<CR>")
 vim.keymap.set("v", "<space>x", ":lua<CR>")
 
-
-local bufopts = { noremap = true, silent = true, }
-vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-vim.keymap.set('n', '<C-S>', vim.lsp.buf.signature_help, bufopts)
-vim.keymap.set('i', '<C-S>', vim.lsp.buf.signature_help, bufopts)
-vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-vim.keymap.set('n', '<space>wl', function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+local bufopts = { noremap = true, silent = true }
+vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
+vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
+vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
+vim.keymap.set("n", "<C-S>", vim.lsp.buf.signature_help, bufopts)
+vim.keymap.set("i", "<C-S>", vim.lsp.buf.signature_help, bufopts)
+vim.keymap.set("n", "<space>wa", vim.lsp.buf.add_workspace_folder, bufopts)
+vim.keymap.set("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, bufopts)
+vim.keymap.set("n", "<space>wl", function()
+	print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 end, bufopts)
-vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+vim.keymap.set("n", "<space>D", vim.lsp.buf.type_definition, bufopts)
+vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename, bufopts)
+vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action, bufopts)
+vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
 vim.keymap.set("n", "<space>f", function()
-    vim.lsp.buf.format({ async = true })
+	vim.lsp.buf.format({ async = true })
 end, bufopts)
-
 
 -- Resize with arrows
 
 -- delta: 2 lines
 
-vim.keymap.set('n', '<C-Up>', ':resize -2<CR>', opts)
+vim.keymap.set("n", "<C-Up>", ":resize -2<CR>", opts)
 
-vim.keymap.set('n', '<C-Down>', ':resize +2<CR>', opts)
+vim.keymap.set("n", "<C-Down>", ":resize +2<CR>", opts)
 
-vim.keymap.set('n', '<C-Left>', ':vertical resize -2<CR>', opts)
+vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", opts)
 
-vim.keymap.set('n', '<C-Right>', ':vertical resize +2<CR>', opts)
-
-
+vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", opts)
 
 -----------------
 
@@ -93,10 +81,8 @@ vim.keymap.set('n', '<C-Right>', ':vertical resize +2<CR>', opts)
 
 -----------------
 
-
-
 -- Hint: start visual mode with the same area as the previous area and the same mode
 
-vim.keymap.set('v', '<', '<gv', opts)
+vim.keymap.set("v", "<", "<gv", opts)
 
-vim.keymap.set('v', '>', '>gv', opts)
+vim.keymap.set("v", ">", ">gv", opts)
