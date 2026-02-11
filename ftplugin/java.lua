@@ -111,7 +111,19 @@ local config = {
 
 	init_options = {
 		bundles = {},
+		extendedClientCapabilities = jdtls.extendedClientCapabilities,
 	},
 }
 
 jdtls.start_or_attach(config)
+
+-- Java 专用快捷键
+vim.keymap.set("n", "<leader>oi", function()
+	jdtls.organize_imports()
+end, { buffer = true, desc = "Organize imports" })
+vim.keymap.set("n", "<leader>jv", function()
+	jdtls.extract_variable()
+end, { buffer = true, desc = "Extract variable" })
+vim.keymap.set("n", "<leader>jm", function()
+	jdtls.extract_method()
+end, { buffer = true, desc = "Extract method" })
