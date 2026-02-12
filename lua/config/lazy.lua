@@ -26,7 +26,7 @@ if vim.g.vscode then
 		{ import = "plugins.better-escape" },
 		{ import = "plugins.nvim-autopairs" },
 		{ import = "plugins.smartyank" },
-		{ import = "plugins.restful-search" },
+		{ import = "plugins.restful-search-nvim" },
 	}
 else
 	-- 终端 Neovim 环境：加载全部插件
