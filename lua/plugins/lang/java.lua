@@ -36,4 +36,22 @@ return {
 		--   })
 		-- end,
 	},
+
+	{
+		"codexiangli/mapper-jump.nvim",
+		config = function()
+			vim.keymap.set("n", "<leader>mx", function()
+				require("mapper-jump").jump_to_xml()
+			end, { desc = "Jump to Mapper XML" })
+			-- Mapper.xml 内 gd 跳回 Mapper 接口（仅 *Mapper.xml buffer）
+			vim.api.nvim_create_autocmd("BufEnter", {
+				pattern = "*Mapper.xml",
+				callback = function()
+					vim.keymap.set("n", "gd", function()
+						require("mapper-jump").jump_to_java()
+					end, { buffer = true, noremap = true, silent = true, desc = "Jump to Mapper interface" })
+				end,
+			})
+		end,
+	},
 }

@@ -238,6 +238,8 @@ else
 	vim.keymap.set("n", "<C-j>", "<C-w>j", opts)
 	vim.keymap.set("n", "<C-k>", "<C-w>k", opts)
 	vim.keymap.set("n", "<C-l>", "<C-w>l", opts)
+	vim.keymap.set("n", "<C-e>", "3<C-e>", { noremap = true, silent = true })
+	vim.keymap.set("n", "<C-y>", "3<C-y>", { noremap = true, silent = true })
 
 	-- 自己添加的快捷键
 	vim.keymap.set("n", "<F2>", ":set invpaste<CR>", { silent = true, noremap = true })
