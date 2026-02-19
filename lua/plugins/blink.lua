@@ -5,6 +5,7 @@ return {
 			"xzbdmw/colorful-menu.nvim",
 			"L3MON4D3/LuaSnip",
 			"Kaiser-Yang/blink-cmp-avante",
+			"Kaiser-Yang/blink-cmp-git",
 			-- ... Other dependencies
 		},
 		version = "1.*",
@@ -34,6 +35,11 @@ return {
 
 			appearance = {
 				nerd_font_variant = "mono",
+				kind_icons = {
+					AvanteCmd = "",
+					AvanteMention = "",
+					AvanteShortcut = "",
+				},
 			},
 
 			completion = {
@@ -60,8 +66,8 @@ return {
 								text = function(ctx)
 									return require("colorful-menu").blink_components_text(ctx)
 								end,
-								hightlight = function(ctx)
-									return require("colorful-menu").blink_components_hightlight(ctx)
+								highlight = function(ctx)
+									return require("colorful-menu").blink_components_highlight(ctx)
 								end,
 							},
 							kind = {
@@ -87,7 +93,7 @@ return {
 
 			sources = {
 				-- Add 'avante' to the list
-				default = { "avante", "lsp", "path", "snippets", "buffer" },
+				default = { "avante", "lsp", "path", "snippets", "buffer", "git" },
 				providers = {
 					avante = {
 						module = "blink-cmp-avante",
@@ -110,10 +116,12 @@ return {
 								return "AvanteShortcut"
 							end,
 						},
-						kind_icons = {
-							AvanteCmd = "",
-							AvanteMention = "",
-							AvanteShortcut = "",
+					},
+					git = {
+						module = "blink-cmp-git",
+						name = "Git",
+						opts = {
+							-- options for the blink-cmp-git
 						},
 					},
 				},

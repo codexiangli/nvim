@@ -1,10 +1,11 @@
-return {{
-    "mbbill/undotree",
-    keys = {
-      { "<leader>ut", "<cmd>UndotreeToggle<cr>", desc = "Toggle undo-tree" },
-    },
-    init = function()
-      vim.cmd([[
+return {
+	{
+		"mbbill/undotree",
+		keys = {
+			{ "<leader>ut", "<cmd>UndotreeToggle<cr>", desc = "Toggle undo-tree" },
+		},
+		init = function()
+			vim.cmd([[
       if has("persistent_undo")
          let target_path = expand('~/.undodir')
 
@@ -17,6 +18,6 @@ return {{
           set undofile
       endif
       ]])
-    end,
-  },
+		end,
+	},
 }

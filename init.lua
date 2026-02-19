@@ -27,7 +27,6 @@ else
 	require("colorscheme")
 	-- require('lsp')
 	require("custom")
-
 	-- Snacks profiler
 	if vim.env.PROF then
 		-- example for lazy.nvim

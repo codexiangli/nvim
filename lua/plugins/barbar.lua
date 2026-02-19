@@ -1,15 +1,15 @@
 return {
-    {
-        "romgrk/barbar.nvim",
-        version = "^1.0.0", -- optional: only update when a new 1.x version is released
-        dependencies = {
-            "lewis6991/gitsigns.nvim",
-            "nvim-tree/nvim-web-devicons",
-        },
-        init = function()
-            vim.g.barbar_auto_setup = false
-        end,
-        lazy = false,
+	{
+		"romgrk/barbar.nvim",
+		version = "^1.0.0", -- optional: only update when a new 1.x version is released
+		dependencies = {
+			"lewis6991/gitsigns.nvim",
+			"nvim-tree/nvim-web-devicons",
+		},
+		init = function()
+			vim.g.barbar_auto_setup = false
+		end,
+		lazy = false,
         -- stylua: ignore
         keys = {
             { "<A-<>", "<CMD>BufferMovePrevious<CR>", mode = { "n" }, desc = "[Buffer] Move buffer left" },
@@ -23,20 +23,21 @@ return {
             { "<A-7>", "<CMD>BufferGoto 7<CR>",       mode = { "n" }, desc = "[Buffer] Go to buffer 7" },
             { "<A-8>", "<CMD>BufferGoto 8<CR>",       mode = { "n" }, desc = "[Buffer] Go to buffer 8" },
             { "<A-9>", "<CMD>BufferGoto 9<CR>",       mode = { "n" }, desc = "[Buffer] Go to buffer 9" },
+            { "<A-0>", "<CMD>BufferLast<CR>",       mode = { "n" }, desc = "[Buffer] Go to last" },
             { "<A-h>", "<CMD>BufferPrevious<CR>",     mode = { "n" }, desc = "[Buffer] Previous buffer" },
             { "<A-l>", "<CMD>BufferNext<CR>",         mode = { "n" }, desc = "[Buffer] Next buffer" },
             -- { "<A-w>", "<CMD>BufferClose<CR>",         mode = { "n" }, desc = "Close buffer" },
         },
-        opts = {
-            animation = false,
-            -- Automatically hide the tabline when there are this many buffers left.
-            -- Set to any value >=0 to enable.
-            auto_hide = 1,
+		opts = {
+			animation = false,
+			-- Automatically hide the tabline when there are this many buffers left.
+			-- Set to any value >=0 to enable.
+			auto_hide = 1,
 
-            -- Set the filetypes which barbar will offset itself for
-            sidebar_filetypes = {
-                NvimTree = true, -- Use the default values: {event = 'BufWinLeave', text = '', align = 'left'}
-            },
-        },
-    },
+			-- Set the filetypes which barbar will offset itself for
+			sidebar_filetypes = {
+				NvimTree = true, -- Use the default values: {event = 'BufWinLeave', text = '', align = 'left'}
+			},
+		},
+	},
 }
