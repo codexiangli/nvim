@@ -139,6 +139,7 @@ local config = {
 			eclipse = {
 				downloadSources = true,
 			},
+			inlayHints = { parameterNames = { enabled = "all" } },
 
 			-- 代码补全
 			completion = {
@@ -208,6 +209,7 @@ local config = {
 
 			-- 配置运行时（支持多版本 JDK）
 			configuration = {
+				updateBuildConfiguration = "interactive",
 				runtimes = {
 					{
 						name = "JavaSE-1.8",

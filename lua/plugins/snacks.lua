@@ -86,7 +86,7 @@ return {
 							["<A-u>"] = { "list_scroll_up", mode = { "n", "i" } },
 							["<A-d>"] = { "list_scroll_down", mode = { "n", "i" } },
 							["<c-j>"] = {},
-							["<c-k>"] = {},
+							-- ["<c-k>"] = {},
 						},
 					},
 				},

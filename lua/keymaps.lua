@@ -238,6 +238,7 @@ else
 	vim.keymap.set("n", "<C-j>", "<C-w>j", opts)
 	vim.keymap.set("n", "<C-k>", "<C-w>k", opts)
 	vim.keymap.set("n", "<C-l>", "<C-w>l", opts)
+	-- 滚动
 	vim.keymap.set("n", "<C-e>", "3<C-e>", { noremap = true, silent = true })
 	vim.keymap.set("n", "<C-y>", "3<C-y>", { noremap = true, silent = true })
 
@@ -272,10 +273,20 @@ else
 		vim.lsp.buf.format({ async = true })
 	end, bufopts)
 
-	-- Resize with arrows
+	-- Resize windows with leader+w prefix
 	-- delta: 2 lines
-	vim.keymap.set("n", "<C-Up>", ":resize -2<CR>", opts)
-	vim.keymap.set("n", "<C-Down>", ":resize +2<CR>", opts)
-	vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", opts)
-	vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", opts)
+	vim.keymap.set("n", "<A-up>", ":resize +3<CR>", { desc = "Increase height", noremap = true, silent = true })
+	vim.keymap.set("n", "<A-down>", ":resize -3<CR>", { desc = "Decrease height", noremap = true, silent = true })
+	vim.keymap.set(
+		"n",
+		"<A-left>",
+		":vertical resize +3<CR>",
+		{ desc = "Increase width", noremap = true, silent = true }
+	)
+	vim.keymap.set(
+		"n",
+		"<A-right>",
+		":vertical resize -3<CR>",
+		{ desc = "Decrease width", noremap = true, silent = true }
+	)
 end

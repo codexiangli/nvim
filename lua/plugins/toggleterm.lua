@@ -3,7 +3,7 @@ return {
 		"akinsho/toggleterm.nvim",
 		config = function()
 			require("toggleterm").setup({
-				open_mapping = [[<c-i>]],
+				open_mapping = [[<c-t>]],
 				size = 15,
 				direction = "horizontal",
 				-- size = 60,
