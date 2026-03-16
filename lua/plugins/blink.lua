@@ -133,15 +133,6 @@ return {
 							end,
 						},
 					},
-					-- Hide snippets after trigger character
-					-- Trigger characters are defined by the sources. For example, for Lua, the trigger characters are ., ", '.
-					snippets = {
-						score_offset = 70,
-						should_show_items = function(ctx)
-							return ctx.trigger.initial_kind ~= "trigger_character"
-						end,
-						fallbacks = { "buffer" },
-					},
 					lsp = {
 						-- Default
 						-- Filter text items from the LSP provider, since we have the buffer provider for that
@@ -151,6 +142,15 @@ return {
 							end, items)
 						end,
 						score_offset = 60,
+						fallbacks = { "buffer" },
+					},
+					-- Hide snippets after trigger character
+					-- Trigger characters are defined by the sources. For example, for Lua, the trigger characters are ., ", '.
+					snippets = {
+						score_offset = 50,
+						should_show_items = function(ctx)
+							return ctx.trigger.initial_kind ~= "trigger_character"
+						end,
 						fallbacks = { "buffer" },
 					},
 					buffer = {

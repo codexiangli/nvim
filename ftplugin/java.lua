@@ -110,6 +110,8 @@ local config = {
 
 	cmd = {
 		mason_path .. "/bin/jdtls",
+		"-Xms4G",
+		"-Xmx6G",
 		"-javaagent:" .. lombok_jar,
 		"-data",
 		workspace_dir,
@@ -194,6 +196,17 @@ local config = {
 			referencesCodeLens = { enabled = true },
 			implementationsCodeLens = { enabled = true },
 			references = { includeDecompiledSources = true },
+
+			-- 排除编译产物目录，减少索引量
+			project = {
+				resourceFilters = {
+					"**/target/**",
+					"**/build/**",
+					"**/node_modules/**",
+					"**/.git/**",
+					"**/out/**",
+				},
+			},
 
 			-- 格式化
 			format = {
