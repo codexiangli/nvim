@@ -473,6 +473,75 @@ vim.api.nvim_create_autocmd("BufEnter", {
 })
 
 -- Java 专用快捷键
+-- 多模块项目刷新（自动刷新所有模块）
+vim.keymap.set("n", "<leader>ju", function()
+	jdtls.update_projects_config({ select_mode = "all" })
+end, { buffer = true, desc = "Update all modules config" })
+
+-- 复制 完整包名.类名.方法名 到剪贴板
+vim.keymap.set("n", "<leader>cy", function()
+	-- 获取包名（从 package 声明）
+	local package_name = ""
+	local class_name = ""
+	local lines = vim.api.nvim_buf_get_lines(0, 0, 100, false) -- 检查前100行
+
+	for _, line in ipairs(lines) do
+		-- 获取包名
+		if package_name == "" then
+			local pkg = line:match("^%s*package%s+([%w%.]+)%s*;")
+			if pkg then
+				package_name = pkg
+			end
+		end
+
+		-- 获取类名（从 class/interface 声明）
+		if class_name == "" then
+			local cls = line:match("class%s+([%w]+)") or line:match("interface%s+([%w]+)")
+			if cls then
+				class_name = cls
+			end
+		end
+
+		-- 都找到了就退出
+		if package_name ~= "" and class_name ~= "" then
+			break
+		end
+	end
+
+	-- 如果没找到类名，从文件名获取
+	if class_name == "" then
+		class_name = vim.fn.expand("%:t:r")
+		-- 处理 JAR 文件中的特殊格式
+		class_name = class_name:gsub("%%3C.*", "") -- 移除 %3C 后面的内容
+		class_name = class_name:gsub("%(.*", "") -- 移除括号及后面的内容
+	end
+
+	-- 使用 treesitter 获取当前光标所在的方法名
+	local node = vim.treesitter.get_node()
+	while node do
+		local node_type = node:type()
+		if node_type == "method_declaration" or node_type == "interface_method_declaration" then
+			-- 找到方法名节点
+			for child in node:iter_children() do
+				local child_type = child:type()
+				if child_type == "identifier" or child_type == "name" then
+					local method_name = vim.treesitter.get_node_text(child, 0)
+					local result = package_name .. "." .. class_name .. "." .. method_name
+					vim.fn.setreg("+", result)
+					vim.notify("Copied: " .. result, vim.log.levels.INFO)
+					return
+				end
+			end
+		end
+		node = node:parent()
+	end
+
+	-- 如果没找到方法，只复制 包名.类名
+	local result = package_name .. "." .. class_name
+	vim.fn.setreg("+", result)
+	vim.notify("Copied: " .. result .. " (no method found)", vim.log.levels.INFO)
+end, { buffer = true, desc = "Copy full.package.ClassName.methodName" })
+
 vim.keymap.set("n", "<leader>oi", function()
 	jdtls.organize_imports()
 end, { buffer = true, desc = "Organize imports" })
