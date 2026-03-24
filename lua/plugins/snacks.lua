@@ -47,6 +47,9 @@ return {
 			},
 			picker = {
 				enabled = true,
+				opts = {
+					case_sensitive = false,
+				},
 				previewers = {
 					diff = {
 						builtin = false, -- use Neovim for previewing diffs (true) or use an external tool (false)
