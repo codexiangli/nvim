@@ -47,8 +47,13 @@ return {
 			},
 			picker = {
 				enabled = true,
-				opts = {
-					case_sensitive = false,
+				matcher = {
+					filename_bonus = true, -- 给文件名匹配更高分数（默认 true）
+				},
+				formatters = {
+					file = {
+						filename_first = true, -- 文件名显示在路径前面
+					},
 				},
 				previewers = {
 					diff = {
