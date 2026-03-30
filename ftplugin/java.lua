@@ -212,8 +212,8 @@ local config = {
 			format = {
 				enabled = true,
 				settings = {
-					url = vim.fn.stdpath("config") .. "/lang-servers/intellij-java-google-style.xml",
-					profile = "GoogleStyle",
+					url = vim.fn.stdpath("config") .. "/lang-servers/intellij-rere-java-style.xml",
+					profile = "ATRenew",
 				},
 			},
 

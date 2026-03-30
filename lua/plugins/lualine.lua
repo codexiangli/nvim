@@ -22,8 +22,20 @@ return {
 						padding = { left = 1, right = 0 },
 					},
 				},
-				lualine_v = {},
-				lualine_x = { "encoding", "fileformat", "filetype" },
+				lualine_x = {
+					{
+						function()
+							local ok, session = pcall(function()
+								return require("auto-session").current_session_name(true)
+							end)
+							return ok and session or ""
+						end,
+						color = { fg = "#89b4fa" },
+					},
+					"encoding",
+					"fileformat",
+					"filetype",
+				},
 				lualine_y = { "progress" },
 				lualine_z = { "location" },
 			},

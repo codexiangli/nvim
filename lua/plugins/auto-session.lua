@@ -8,6 +8,7 @@ return {
             { "<leader>ps", "<CMD>AutoSession restore<CR>", desc = "[Auto Session] Restore session" },
             { "<leader>pS", "<CMD>AutoSession search<CR>",  desc = "[Auto Session] Search session" },
             { "<leader>pD", "<CMD>AutoSession delete<CR>",  desc = "[Auto Session] Delete session" },
+            { "<leader>pa", "<cmd>AutoSession toggle<CR>", desc = "Toggle autosave" },
         },
 
 		---enables autocomplete for opts
@@ -19,6 +20,8 @@ return {
 			session_lens = {
 				picker = "snacks",
 			},
+			git_use_branch_name = true,
+			git_auto_restore_on_branch_change = true,
 		},
 
 		init = function()

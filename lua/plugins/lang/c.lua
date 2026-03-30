@@ -1,7 +1,6 @@
 vim.lsp.enable("clangd")
 
 return {
-
 	{
 		"nvim-treesitter/nvim-treesitter",
 		optional = true,
