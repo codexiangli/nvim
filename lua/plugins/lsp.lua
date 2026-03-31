@@ -81,6 +81,7 @@ return {
 			formatters_by_ft = {
 				-- Use the "_" filetype to run formatters on filetypes that don't have other formatters configured.
 				["_"] = { "trim_whitespace" },
+				json = { "jq" },
 			},
 
 			format_on_save = function(_)
