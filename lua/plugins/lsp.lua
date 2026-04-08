@@ -68,7 +68,7 @@ return {
 					vim.keymap.set("n", "<leader>wl", function()
 						print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 					end, { desc = "[LSP] List workspace folders" })
-					vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { buffer = ev.buf, desc = "[LSP] Rename" })
+					-- vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { buffer = ev.buf, desc = "[LSP] Rename" })
 				end,
 			})
 		end,

@@ -110,8 +110,8 @@ local config = {
 
 	cmd = {
 		mason_path .. "/bin/jdtls",
-		"-Xms4G",
-		"-Xmx6G",
+		"-Xms6G",
+		"-Xmx8G",
 		"-javaagent:" .. lombok_jar,
 		"-data",
 		workspace_dir,
@@ -126,7 +126,7 @@ local config = {
 
 			-- Setup automatical package import oranization on file save
 			saveActions = {
-				organizeImports = true,
+				organizeImports = false,
 			},
 
 			-- Maven 支持
@@ -244,21 +244,21 @@ local config = {
 		},
 	},
 
-	-- Function that will be ran once the language server is attached
-	on_attach = function(_, bufnr)
-		-- local ts_indent = require("nvim-treesitter.indent")
-		-- ts_indent.detach(bufnr)
-		-- Enable jdtls commands to be used in Neovim
-		vim.lsp.codelens.refresh()
-
-		-- Setup a function that automatically runs every time a java file is saved to refresh the code lens
-		vim.api.nvim_create_autocmd("BufWritePost", {
-			pattern = { "*.java" },
-			callback = function()
-				local _, _ = pcall(vim.lsp.codelens.refresh)
-			end,
-		})
-	end,
+	-- -- Function that will be ran once the language server is attached
+	-- on_attach = function(_, bufnr)
+	-- 	-- local ts_indent = require("nvim-treesitter.indent")
+	-- 	-- ts_indent.detach(bufnr)
+	-- 	-- Enable jdtls commands to be used in Neovim
+	-- 	vim.lsp.codelens.refresh()
+	--
+	-- 	-- Setup a function that automatically runs every time a java file is saved to refresh the code lens
+	-- 	vim.api.nvim_create_autocmd("BufWritePost", {
+	-- 		pattern = { "*.java" },
+	-- 		callback = function()
+	-- 			local _, _ = pcall(vim.lsp.codelens.refresh)
+	-- 		end,
+	-- 	})
+	-- end,
 
 	flags = {
 		allow_incremental_sync = true,

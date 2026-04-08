@@ -280,7 +280,13 @@ return {
 			},
 			-- Grep
 			-- { "<leader>sb", function() require("snacks").picker.lines() end, desc = "[Snacks] Buffer lines" },
-			-- { "<leader>sB", function() require("snacks").picker.grep_buffers() end, desc = "[Snacks] Grep open buffers" },
+			{
+				"<leader>sB",
+				function()
+					require("snacks").picker.grep_buffers()
+				end,
+				desc = "[Snacks] Grep open buffers",
+			},
 			{
 				"<leader>sg",
 				function()

@@ -25,3 +25,5 @@ vim.opt.ignorecase = true -- ignore case in searches by default
 vim.opt.smartcase = true -- but make it case sensitive if an uppercase is entered
 
 vim.opt.conceallevel = 0
+
+vim.opt.formatoptions:remove({ "c", "r", "o" })
